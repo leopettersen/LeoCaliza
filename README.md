@@ -124,10 +124,10 @@ Ciclo de vida do pedido: **Em análise → Aprovado ou Reprovado → Contrato ex
 
 | Diagrama | Arquivo |
 | :---: | :---: |
-| **Casos de Uso** | [docs/casos-de-uso.png](./docs/casos-de-uso.png) |
-| **Classes** | [docs/diagrama-classes.png](./docs/diagrama-classes.png) |
-| **Pacotes (Visão Lógica)** | [docs/diagrama-pacotes.png](./docs/diagrama-pacotes.png) |
-| **Histórias do Usuário** | [docs/historias-usuario.md](./docs/historias-usuario.md) |
+| **Casos de Uso** | [docs/Modelagem do Sistema — Aluguel de Carros.pdf](./docs/Modelagem%20do%20Sistema%20—%20Aluguel%20de%20Carros.pdf) |
+| **Classes** | [docs/Modelagem do Sistema — Aluguel de Carros.pdf](./docs/Modelagem%20do%20Sistema%20—%20Aluguel%20de%20Carros.pdf) |
+| **Pacotes (Visão Lógica)** | [docs/Modelagem do Sistema — Aluguel de Carros.pdf](./docs/Modelagem%20do%20Sistema%20—%20Aluguel%20de%20Carros.pdf) |
+| **Histórias do Usuário** | [docs/Modelagem do Sistema — Aluguel de Carros.pdf](./docs/Modelagem%20do%20Sistema%20—%20Aluguel%20de%20Carros.pdf) |
 | **Wireframes** | [docs/wireframes](./docs/wireframes) |
 
 ---
@@ -306,7 +306,7 @@ _Ferramenta utilizada: JUnit (Spring Boot Test)._
 
 | 👤 Nome | :octocat: GitHub | 💼 LinkedIn |
 |---------|------------------|-------------|
-| Leonardo Pettersen | [GitHub](https://github.com/user) | [LinkedIn](https://www.linkedin.com/in/user) |
+| Leonardo Pettersen | [GitHub](https://github.com/leopettersen) | [LinkedIn](https://www.linkedin.com/in/leonardopettersen) |
 
 ---
 
