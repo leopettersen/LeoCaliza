@@ -302,11 +302,11 @@ _Ferramenta utilizada: JUnit (Spring Boot Test)._
 
 ---
 
-## 👥 Autores
+## 👥 Autor
 
-| 👤 Nome | :octocat: GitHub | 💼 LinkedIn |
-|---------|------------------|-------------|
-| Leonardo Pettersen | [GitHub](https://github.com/leopettersen) | [LinkedIn](https://www.linkedin.com/in/leonardopettersen) |
+| 👤 Nome | 🖼️ Foto | :octocat: GitHub | 💼 LinkedIn | 📤 E-mail |
+|---------|----------|-----------------|-------------|-----------|
+| Leonardo Pettersen | <div align="center"><img src="https://github.com/leopettersen.png" width="70px" height="70px"></div> | <div align="center"><a href="https://github.com/leopettersen"><img src="https://joaopauloaramuni.github.io/image/github6.png" width="50px" height="50px"></a></div> | <div align="center"><a href="https://www.linkedin.com/in/leonardopettersen"><img src="https://joaopauloaramuni.github.io/image/linkedin2.png" width="50px" height="50px"></a></div> | <div align="center"><a href="mailto:leonardopettersen465@yahoo.com"><img src="https://joaopauloaramuni.github.io/image/gmail3.png" width="50px" height="50px"></a></div> |
 
 ---
 
