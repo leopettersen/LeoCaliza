@@ -47,6 +47,21 @@ export const TEXTOS = {
     jaTemCadastro: 'Já tem cadastro?',
     botaoEntrar: 'Entrar',
   },
+  meusPedidos: {
+    titulo: 'Meus pedidos',
+  },
+  novoPedido: {
+    titulo: 'Novo pedido de aluguel',
+  },
+  detalhePedido: {
+    titulo: 'Detalhe do pedido',
+  },
+  meuCadastro: {
+    titulo: 'Meu cadastro',
+  },
+  pedidosRecebidos: {
+    titulo: 'Pedidos recebidos',
+  },
   erros: {
     generico: 'Não foi possível concluir a operação. Tente novamente.',
     semConexao: 'Não foi possível conectar ao servidor.',
