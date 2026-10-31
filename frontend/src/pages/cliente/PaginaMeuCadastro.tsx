@@ -8,7 +8,7 @@ import {
   type SxProps,
   type Theme,
 } from '@mui/material'
-import { useState, type ChangeEvent, type FormEvent } from 'react'
+import { useState, type ChangeEvent, type SubmitEvent } from 'react'
 import { Carregando } from '../../components/Carregando.tsx'
 import { DialogoConfirmacao } from '../../components/DialogoConfirmacao.tsx'
 import { SecaoFormulario } from '../../components/SecaoFormulario.tsx'
@@ -99,7 +99,7 @@ function FormularioMeuCadastro({ cliente }: { cliente: Cliente }) {
     }
   }
 
-  async function salvar(evento: FormEvent<HTMLFormElement>) {
+  async function salvar(evento: SubmitEvent<HTMLFormElement>) {
     evento.preventDefault()
     setErro(null)
     setSucesso(null)

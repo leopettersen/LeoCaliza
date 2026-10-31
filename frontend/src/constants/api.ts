@@ -26,6 +26,9 @@ export const ENDPOINTS = {
     base: '/pedidos',
     porId: (id: number) => `/pedidos/${id}`,
   },
+  agentes: {
+    base: '/agentes',
+  },
 } as const
 
 export const PARAMETROS_API = {

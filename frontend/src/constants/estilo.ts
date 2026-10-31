@@ -21,5 +21,6 @@ export const RAIO_BORDA = 10
 export const LARGURAS = {
   conteudo: 1120,
   formulario: 440,
+  painelResumo: 320,
   logo: 48,
 } as const

@@ -11,7 +11,7 @@ import {
   type SxProps,
   type Theme,
 } from '@mui/material'
-import { useState, type FormEvent } from 'react'
+import { useState, type SubmitEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LayoutAutenticacao } from '../../components/LayoutAutenticacao.tsx'
 import { PERFIS } from '../../constants/perfis.ts'
@@ -31,7 +31,7 @@ export function PaginaLogin() {
   const [enviando, setEnviando] = useState(false)
   const [perfilCadastro, setPerfilCadastro] = useState<Perfil>(PERFIS.cliente)
 
-  async function enviarLogin(evento: FormEvent<HTMLFormElement>) {
+  async function enviarLogin(evento: SubmitEvent<HTMLFormElement>) {
     evento.preventDefault()
     setErro(null)
     setEnviando(true)

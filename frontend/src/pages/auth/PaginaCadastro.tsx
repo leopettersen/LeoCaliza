@@ -13,7 +13,7 @@ import {
   type SxProps,
   type Theme,
 } from '@mui/material'
-import { useState, type ChangeEvent, type FormEvent } from 'react'
+import { useState, type ChangeEvent, type SubmitEvent } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { LayoutAutenticacao } from '../../components/LayoutAutenticacao.tsx'
 import { PERFIS, TIPOS_AGENTE } from '../../constants/perfis.ts'
@@ -65,7 +65,7 @@ export function PaginaCadastro() {
     return ehCliente ? { ...dadosComuns, cpf, rg, endereco, profissao } : { ...dadosComuns, tipoAgente }
   }
 
-  async function enviarCadastro(evento: FormEvent<HTMLFormElement>) {
+  async function enviarCadastro(evento: SubmitEvent<HTMLFormElement>) {
     evento.preventDefault()
     setErro(null)
     if (formulario.senha !== formulario.confirmarSenha) {

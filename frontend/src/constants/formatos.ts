@@ -7,4 +7,5 @@ export const FORMATOS = {
   separadorDataExibicao: '/',
   separadorPeriodo: ' – ',
   separadorAutomovel: ' · ',
+  separadorPalavras: ' ',
 } as const
