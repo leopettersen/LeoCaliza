@@ -12,6 +12,8 @@ public interface PedidoAluguelRepository extends JpaRepository<PedidoAluguel, Lo
 
     List<PedidoAluguel> findByClienteLogin(String login);
 
+    List<PedidoAluguel> findByClienteLoginAndStatus(String login, StatusPedido status);
+
     List<PedidoAluguel> findByStatus(StatusPedido status);
 
     boolean existsByClienteId(Long clienteId);

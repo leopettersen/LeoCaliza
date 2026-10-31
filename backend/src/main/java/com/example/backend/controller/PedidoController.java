@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.PedidoRequest;
 import com.example.backend.dto.PedidoResponse;
+import com.example.backend.model.enums.StatusPedido;
 import com.example.backend.service.PedidoService;
 
 import jakarta.validation.Valid;
@@ -41,8 +43,9 @@ public class PedidoController {
 
     @GetMapping
     @PreAuthorize("hasAnyRole('CLIENTE', 'AGENTE')")
-    public ResponseEntity<List<PedidoResponse>> listar(Authentication authentication) {
-        return ResponseEntity.ok(pedidoService.listar(authentication.getName()));
+    public ResponseEntity<List<PedidoResponse>> listar(@RequestParam(required = false) StatusPedido status,
+                                                       Authentication authentication) {
+        return ResponseEntity.ok(pedidoService.listar(authentication.getName(), status));
     }
 
     @GetMapping("/{id}")

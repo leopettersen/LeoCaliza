@@ -65,12 +65,22 @@ public class PedidoService {
     }
 
     @Transactional(readOnly = true)
-    public List<PedidoResponse> listar(String login) {
+    public List<PedidoResponse> listar(String login, StatusPedido status) {
         Usuario usuario = buscarUsuario(login);
         List<PedidoAluguel> pedidos = usuario.getPerfil() == Perfil.AGENTE
-                ? pedidoRepository.findAll()
-                : pedidoRepository.findByClienteLogin(login);
+                ? listarTodos(status)
+                : listarDoCliente(login, status);
         return pedidos.stream().map(PedidoResponse::from).toList();
+    }
+
+    private List<PedidoAluguel> listarTodos(StatusPedido status) {
+        return status == null ? pedidoRepository.findAll() : pedidoRepository.findByStatus(status);
+    }
+
+    private List<PedidoAluguel> listarDoCliente(String login, StatusPedido status) {
+        return status == null
+                ? pedidoRepository.findByClienteLogin(login)
+                : pedidoRepository.findByClienteLoginAndStatus(login, status);
     }
 
     @Transactional(readOnly = true)
