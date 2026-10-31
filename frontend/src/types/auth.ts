@@ -17,6 +17,24 @@ export interface RespostaLogin {
   tipoAgente: TipoAgente | null
 }
 
+export interface DadosCadastro {
+  login: string
+  senha: string
+  perfil: Perfil
+  nome: string
+  rg?: string
+  cpf?: string
+  endereco?: string
+  profissao?: string
+  tipoAgente?: TipoAgente
+}
+
+export interface RespostaCadastro {
+  id: number
+  login: string
+  perfil: Perfil
+}
+
 export interface Sessao {
   token: string
   perfil: Perfil

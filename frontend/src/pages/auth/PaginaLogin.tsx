@@ -96,8 +96,8 @@ export function PaginaLogin() {
           value={perfilCadastro}
           onChange={(evento) => setPerfilCadastro(evento.target.value as Perfil)}
         >
-          <FormControlLabel value={PERFIS.cliente} control={<Radio />} label={TEXTOS.login.opcaoCliente} />
-          <FormControlLabel value={PERFIS.agente} control={<Radio />} label={TEXTOS.login.opcaoAgente} />
+          <FormControlLabel value={PERFIS.cliente} control={<Radio />} label={TEXTOS.perfis.cliente} />
+          <FormControlLabel value={PERFIS.agente} control={<Radio />} label={TEXTOS.perfis.agente} />
         </RadioGroup>
         <Button variant="outlined" size="large" onClick={irParaCadastro} fullWidth>
           {TEXTOS.login.botaoCriarCadastro}
