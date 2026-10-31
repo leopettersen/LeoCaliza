@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.example.backend.model.Usuario;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
@@ -34,5 +36,13 @@ public class JwtService {
             .expiration(new Date(agora.getTime() + expirationMs))
             .signWith(key)
             .compact();
+  }
+
+  public Claims validarToken(String token) throws JwtException {
+    return Jwts.parser()
+            .verifyWith(key)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload();
   }
 }
