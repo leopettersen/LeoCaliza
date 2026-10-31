@@ -8,7 +8,8 @@ import com.example.backend.model.enums.StatusPedido;
 public record PedidoResponse(
         Long id,
         Long clienteId,
-        Long automovelId,
+        String clienteNome,
+        AutomovelResponse automovel,
         LocalDate dataCriacao,
         LocalDate dataRetirada,
         LocalDate dataDevolucao,
@@ -18,7 +19,8 @@ public record PedidoResponse(
         return new PedidoResponse(
                 pedido.getId(),
                 pedido.getCliente().getId(),
-                pedido.getAutomovel().getId(),
+                pedido.getCliente().getNome(),
+                AutomovelResponse.from(pedido.getAutomovel()),
                 pedido.getDataCriacao(),
                 pedido.getDataRetirada(),
                 pedido.getDataDevolucao(),
