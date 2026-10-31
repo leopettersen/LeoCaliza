@@ -9,6 +9,11 @@ export async function listarPedidos(status?: StatusPedido) {
   return data
 }
 
+export async function buscarPedido(id: number) {
+  const { data } = await api.get<Pedido>(ENDPOINTS.pedidos.porId(id))
+  return data
+}
+
 export async function criarPedido(dados: DadosPedido) {
   const { data } = await api.post<Pedido>(ENDPOINTS.pedidos.base, dados)
   return data

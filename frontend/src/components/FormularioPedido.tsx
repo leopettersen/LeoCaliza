@@ -19,6 +19,7 @@ import { useState, type ChangeEvent, type SubmitEvent } from 'react'
 import { LARGURAS } from '../constants/estilo.ts'
 import { FORMATOS } from '../constants/formatos.ts'
 import { TIPOS_PROPRIETARIO } from '../constants/perfis.ts'
+import { ROTULOS_TIPO_PROPRIETARIO } from '../constants/rotulos.ts'
 import { TEXTOS } from '../constants/textos.ts'
 import { REGRAS_VALIDACAO } from '../constants/validacao.ts'
 import { useAgentes } from '../hooks/useAgentes.ts'
@@ -37,12 +38,6 @@ interface PropriedadesFormularioPedido {
   rotuloEnviar: string
   aoEnviar: (dados: DadosPedido) => Promise<void>
   aoCancelar: () => void
-}
-
-const ROTULOS_PROPRIETARIO: Record<TipoProprietario, string> = {
-  [TIPOS_PROPRIETARIO.cliente]: TEXTOS.tiposProprietario.cliente,
-  [TIPOS_PROPRIETARIO.empresa]: TEXTOS.tiposProprietario.empresa,
-  [TIPOS_PROPRIETARIO.banco]: TEXTOS.tiposProprietario.banco,
 }
 
 function buscarNomeAgente(agentes: Agente[], id: string) {
@@ -76,7 +71,7 @@ export function FormularioPedido({ valoresIniciais, rotuloEnviar, aoEnviar, aoCa
       return TEXTOS.formularioPedido.voceMesmo
     }
     return TEXTOS.formularioPedido.descricaoProprietario(
-      ROTULOS_PROPRIETARIO[valores.tipoProprietario],
+      ROTULOS_TIPO_PROPRIETARIO[valores.tipoProprietario],
       buscarNomeAgente(agentesProprietarios, valores.proprietarioId),
     )
   }
@@ -201,7 +196,7 @@ export function FormularioPedido({ valoresIniciais, rotuloEnviar, aoEnviar, aoCa
               onChange={(evento) => alterarTipoProprietario(evento.target.value as TipoProprietario)}
             >
               {Object.values(TIPOS_PROPRIETARIO).map((tipo) => (
-                <FormControlLabel key={tipo} value={tipo} control={<Radio />} label={ROTULOS_PROPRIETARIO[tipo]} />
+                <FormControlLabel key={tipo} value={tipo} control={<Radio />} label={ROTULOS_TIPO_PROPRIETARIO[tipo]} />
               ))}
             </RadioGroup>
           </FormControl>

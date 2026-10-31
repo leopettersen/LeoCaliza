@@ -16,6 +16,13 @@ export const ROTULOS_STATUS: Record<StatusPedido, string> = {
   [STATUS_PEDIDO.cancelado]: 'Cancelado',
 }
 
+export const ESTADOS_ETAPA = {
+  concluida: 'concluida',
+  atual: 'atual',
+  pendente: 'pendente',
+  erro: 'erro',
+} as const
+
 export const CORES_STATUS: Record<StatusPedido, 'info' | 'success' | 'error' | 'primary' | 'default'> = {
   [STATUS_PEDIDO.emAnalise]: 'info',
   [STATUS_PEDIDO.aprovado]: 'success',
