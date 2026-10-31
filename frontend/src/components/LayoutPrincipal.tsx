@@ -45,7 +45,7 @@ export function LayoutPrincipal() {
           <Typography variant="body2" color="text.secondary" sx={estilos.usuario}>
             {descreverUsuario(sessao)}
           </Typography>
-          <Button variant="outlined" onClick={encerrarSessao}>
+          <Button variant="outlined" onClick={encerrarSessao} sx={estilos.sair}>
             {TEXTOS.menu.botaoSair}
           </Button>
         </Toolbar>
@@ -67,8 +67,10 @@ const estilos = {
     borderColor: 'divider',
   },
   toolbar: {
-    gap: 3,
+    columnGap: 3,
+    rowGap: 1,
     flexWrap: 'wrap',
+    py: { xs: 1, sm: 0 },
   },
   logo: {
     width: LARGURAS.logo,
@@ -80,8 +82,15 @@ const estilos = {
     display: 'flex',
     gap: 1,
     flexGrow: 1,
+    order: { xs: 3, sm: 0 },
+    width: { xs: '100%', sm: 'auto' },
+    overflowX: 'auto',
+  },
+  sair: {
+    ml: { xs: 'auto', sm: 0 },
   },
   itemMenu: {
+    flexShrink: 0,
     color: 'text.secondary',
     borderRadius: 0,
     borderBottom: 2,
