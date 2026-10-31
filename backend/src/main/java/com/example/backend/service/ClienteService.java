@@ -22,6 +22,8 @@ import com.example.backend.repository.PedidoAluguelRepository;
 @Service
 public class ClienteService {
 
+    private static final int MAX_RENDIMENTOS = 3;
+
     private final ClienteRepository clienteRepository;
     private final PedidoAluguelRepository pedidoRepository;
     private final PasswordEncoder passwordEncoder;
@@ -77,13 +79,16 @@ public class ClienteService {
     }
 
     private void aplicarDados(Cliente cliente, ClienteRequest dados) {
+        List<RendimentoRequest> rendimentos = dados.rendimentos() == null ? List.of() : dados.rendimentos();
+        if (rendimentos.size() > MAX_RENDIMENTOS) {
+            throw new BadRequestException("Um cliente pode ter no máximo 3 rendimentos");
+        }
         cliente.setNome(dados.nome());
         cliente.setRg(dados.rg());
         cliente.setCpf(dados.cpf());
         cliente.setEndereco(dados.endereco());
         cliente.setProfissao(dados.profissao());
         cliente.getRendimentos().clear();
-        List<RendimentoRequest> rendimentos = dados.rendimentos() == null ? List.of() : dados.rendimentos();
         for (RendimentoRequest r : rendimentos) {
             Rendimento rendimento = new Rendimento();
             rendimento.setEntidadeEmpregadora(r.entidadeEmpregadora());
