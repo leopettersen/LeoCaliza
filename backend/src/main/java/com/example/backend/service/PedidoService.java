@@ -1,6 +1,7 @@
 package com.example.backend.service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -87,18 +88,14 @@ public class PedidoService {
 
     @Transactional(readOnly = true)
     public PedidoResponse buscar(String login, Long id) {
-        Usuario usuario = buscarUsuario(login);
-        PedidoAluguel pedido = buscarPedido(id);
-        if (usuario.getPerfil() == Perfil.CLIENTE && !pedido.getCliente().getId().equals(usuario.getId())) {
-            throw new ForbiddenException("Pedido pertence a outro cliente");
-        }
-        return PedidoResponse.from(pedido);
+        return PedidoResponse.from(buscarPedidoVisivel(buscarUsuario(login), id));
     }
 
     @Transactional
     public PedidoResponse modificar(String login, Long id, PedidoRequest request) {
         validarDatas(request);
-        PedidoAluguel pedido = buscarPedidoDoCliente(login, id);
+        Usuario usuario = buscarUsuario(login);
+        PedidoAluguel pedido = buscarPedidoVisivel(usuario, id);
         if (pedido.getStatus() != StatusPedido.EM_ANALISE) {
             throw new ConflictException("Só é possível modificar pedido em análise");
         }
@@ -106,6 +103,8 @@ public class PedidoService {
         pedido.setBancoCredito(buscarBancoCredito(request.bancoCreditoId()));
         pedido.setDataRetirada(request.dataRetirada());
         pedido.setDataDevolucao(request.dataDevolucao());
+        pedido.setModificadoPor(usuario);
+        pedido.setDataModificacao(LocalDateTime.now());
         return PedidoResponse.from(pedidoRepository.save(pedido));
     }
 
@@ -134,6 +133,14 @@ public class PedidoService {
         pedido.setAvaliacao(avaliacao);
         pedido.setStatus(request.resultado() ? StatusPedido.APROVADO : StatusPedido.REPROVADO);
         return PedidoResponse.from(pedidoRepository.save(pedido));
+    }
+
+    private PedidoAluguel buscarPedidoVisivel(Usuario usuario, Long id) {
+        PedidoAluguel pedido = buscarPedido(id);
+        if (usuario.getPerfil() == Perfil.CLIENTE && !pedido.getCliente().getId().equals(usuario.getId())) {
+            throw new ForbiddenException("Pedido pertence a outro cliente");
+        }
+        return pedido;
     }
 
     private PedidoAluguel buscarPedidoDoCliente(String login, Long id) {

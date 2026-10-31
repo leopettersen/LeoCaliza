@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "pedido_aluguel")
@@ -46,6 +47,13 @@ public class PedidoAluguel {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "banco_credito_id")
     private Agente bancoCredito;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "modificado_por_id")
+    private Usuario modificadoPor;
+
+    @Column(name = "data_modificacao")
+    private LocalDateTime dataModificacao;
 
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "avaliacao_id", unique = true)

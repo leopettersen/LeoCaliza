@@ -2,6 +2,7 @@ package com.example.backend.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import com.example.backend.model.Agente;
 import com.example.backend.model.PedidoAluguel;
@@ -18,7 +19,9 @@ public record PedidoResponse(
         LocalDate dataRetirada,
         LocalDate dataDevolucao,
         StatusPedido status,
-        AvaliacaoResponse avaliacao) {
+        AvaliacaoResponse avaliacao,
+        String modificadoPor,
+        LocalDateTime dataModificacao) {
 
     public static PedidoResponse from(PedidoAluguel pedido) {
         Agente banco = pedido.getBancoCredito();
@@ -33,6 +36,8 @@ public record PedidoResponse(
                 pedido.getDataRetirada(),
                 pedido.getDataDevolucao(),
                 pedido.getStatus(),
-                pedido.getAvaliacao() == null ? null : AvaliacaoResponse.from(pedido.getAvaliacao()));
+                pedido.getAvaliacao() == null ? null : AvaliacaoResponse.from(pedido.getAvaliacao()),
+                pedido.getModificadoPor() == null ? null : pedido.getModificadoPor().getLogin(),
+                pedido.getDataModificacao());
     }
 }
