@@ -20,6 +20,7 @@ public record PedidoResponse(
         LocalDate dataDevolucao,
         StatusPedido status,
         AvaliacaoResponse avaliacao,
+        ContratoCreditoResponse contratoCredito,
         String modificadoPor,
         LocalDateTime dataModificacao) {
 
@@ -37,6 +38,7 @@ public record PedidoResponse(
                 pedido.getDataDevolucao(),
                 pedido.getStatus(),
                 pedido.getAvaliacao() == null ? null : AvaliacaoResponse.from(pedido.getAvaliacao()),
+                pedido.getContratoCredito() == null ? null : ContratoCreditoResponse.from(pedido.getContratoCredito()),
                 pedido.getModificadoPor() == null ? null : pedido.getModificadoPor().getLogin(),
                 pedido.getDataModificacao());
     }

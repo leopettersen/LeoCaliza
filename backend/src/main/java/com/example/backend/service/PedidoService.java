@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.dto.AutomovelRequest;
 import com.example.backend.dto.AvaliacaoRequest;
+import com.example.backend.dto.ContratoCreditoRequest;
 import com.example.backend.dto.PedidoRequest;
 import com.example.backend.dto.PedidoResponse;
 import com.example.backend.dto.TipoProprietario;
@@ -21,6 +22,7 @@ import com.example.backend.model.Agente;
 import com.example.backend.model.Automovel;
 import com.example.backend.model.AvaliacaoFinanceira;
 import com.example.backend.model.Cliente;
+import com.example.backend.model.ContratoCredito;
 import com.example.backend.model.PedidoAluguel;
 import com.example.backend.model.Usuario;
 import com.example.backend.model.enums.Perfil;
@@ -132,6 +134,33 @@ public class PedidoService {
         avaliacao.setObservacao(request.observacao());
         pedido.setAvaliacao(avaliacao);
         pedido.setStatus(request.resultado() ? StatusPedido.APROVADO : StatusPedido.REPROVADO);
+        return PedidoResponse.from(pedidoRepository.save(pedido));
+    }
+
+    @Transactional
+    public PedidoResponse concederCredito(String login, Long id, ContratoCreditoRequest request) {
+        Agente agente = buscarAgente(login);
+        if (!agente.isBanco()) {
+            throw new ForbiddenException("Apenas bancos concedem contrato de crédito");
+        }
+        PedidoAluguel pedido = buscarPedido(id);
+        if (pedido.getBancoCredito() == null) {
+            throw new ConflictException("Pedido não solicitou contrato de crédito");
+        }
+        if (!pedido.getBancoCredito().getId().equals(agente.getId())) {
+            throw new ForbiddenException("Crédito solicitado a outro banco");
+        }
+        if (pedido.getStatus() != StatusPedido.EM_ANALISE && pedido.getStatus() != StatusPedido.APROVADO) {
+            throw new ConflictException("Crédito só pode ser concedido antes da execução do contrato");
+        }
+        if (pedido.getContratoCredito() != null) {
+            throw new ConflictException("Contrato de crédito já concedido");
+        }
+        ContratoCredito contrato = new ContratoCredito();
+        contrato.setAgente(agente);
+        contrato.setValor(request.valor());
+        contrato.setPrazoMeses(request.prazoMeses());
+        pedido.setContratoCredito(contrato);
         return PedidoResponse.from(pedidoRepository.save(pedido));
     }
 
