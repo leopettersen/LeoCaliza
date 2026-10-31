@@ -15,6 +15,7 @@ export const TEXTOS = {
   login: {
     titulo: 'Entrar',
     subtitulo: 'Acesso apenas para usuários cadastrados',
+    sessaoExpirada: 'Sua sessão expirou. Entre novamente.',
     campoUsuario: 'Usuário',
     exemploUsuario: 'seu.usuario',
     campoSenha: 'Senha',

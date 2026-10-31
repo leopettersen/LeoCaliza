@@ -4,6 +4,7 @@ import type { CredenciaisLogin, Sessao } from '../types/auth.ts'
 export interface ValorContextoAutenticacao {
   sessao: Sessao | null
   estaAutenticado: boolean
+  sessaoExpirada: boolean
   entrar: (credenciais: CredenciaisLogin) => Promise<Sessao>
   sair: () => void
 }
