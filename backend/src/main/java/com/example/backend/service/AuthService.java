@@ -12,7 +12,9 @@ import com.example.backend.exception.BadRequestException;
 import com.example.backend.exception.ConflictException;
 import com.example.backend.exception.UnauthorizedException;
 import com.example.backend.model.Agente;
+import com.example.backend.model.Cliente;
 import com.example.backend.model.enums.Perfil;
+import com.example.backend.model.enums.TipoAgente;
 import com.example.backend.model.Usuario;
 import com.example.backend.repository.AgenteRepository;
 import com.example.backend.repository.UsuarioRepository;
@@ -42,7 +44,15 @@ public class AuthService {
         Usuario usuario = usuarioRepository.findByLogin(request.login())
                 .filter(u -> passwordEncoder.matches(request.senha(), u.getSenhaHash()))
                 .orElseThrow(() -> new UnauthorizedException("Login ou senha inválidos"));
-        return new LoginResponse(jwtService.gerarToken(usuario), "Bearer", usuario.getPerfil());
+        String nome = usuario.getLogin();
+        TipoAgente tipoAgente = null;
+        if (usuario instanceof Cliente cliente) {
+            nome = cliente.getNome();
+        } else if (usuario instanceof Agente agente) {
+            nome = agente.getNome();
+            tipoAgente = agente.getTipo();
+        }
+        return new LoginResponse(jwtService.gerarToken(usuario), "Bearer", usuario.getPerfil(), nome, tipoAgente);
     }
 
     @Transactional
