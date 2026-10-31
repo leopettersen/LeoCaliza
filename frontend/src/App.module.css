@@ -1,0 +1,12 @@
+.inicio {
+  display: flex;
+  align-items: center;
+  gap: var(--espaco-md);
+  padding: var(--espaco-xl);
+}
+
+.logo {
+  width: var(--largura-logo);
+  height: var(--largura-logo);
+  object-fit: contain;
+}

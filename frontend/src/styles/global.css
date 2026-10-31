@@ -1,0 +1,31 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--fonte-base);
+  font-size: var(--tamanho-fonte-base);
+  color: var(--cor-texto);
+  background: var(--cor-fundo);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  color: var(--cor-primaria);
+}
+
+a {
+  color: var(--cor-secundaria);
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
