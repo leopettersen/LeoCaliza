@@ -12,6 +12,17 @@ export const TEXTOS = {
     empresa: 'Empresa',
     banco: 'Banco',
   },
+  camposCliente: {
+    nome: 'Nome completo',
+    cpf: 'CPF',
+    exemploCpf: '000.000.000-00',
+    rg: 'RG',
+    endereco: 'Endereço',
+    profissao: 'Profissão',
+  },
+  geral: {
+    carregando: 'Carregando...',
+  },
   login: {
     titulo: 'Entrar',
     subtitulo: 'Acesso apenas para usuários cadastrados',
@@ -30,13 +41,7 @@ export const TEXTOS = {
     campoPerfil: 'Perfil',
     secaoAcesso: 'Acesso',
     secaoIdentificacao: 'Identificação',
-    campoNomeCliente: 'Nome completo',
     campoNomeAgente: 'Nome da empresa ou banco',
-    campoCpf: 'CPF',
-    exemploCpf: '000.000.000-00',
-    campoRg: 'RG',
-    campoEndereco: 'Endereço',
-    campoProfissao: 'Profissão',
     campoTipoAgente: 'Tipo de agente',
     campoUsuario: 'Usuário',
     campoSenha: 'Senha',
@@ -69,6 +74,7 @@ export const TEXTOS = {
   },
   meuCadastro: {
     titulo: 'Meu cadastro',
+    secaoIdentificacao: 'Identificação',
   },
   pedidosRecebidos: {
     titulo: 'Pedidos recebidos',

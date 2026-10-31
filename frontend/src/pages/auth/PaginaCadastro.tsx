@@ -108,7 +108,7 @@ export function PaginaCadastro() {
           {TEXTOS.cadastro.secaoIdentificacao}
         </Typography>
         <TextField
-          label={ehCliente ? TEXTOS.cadastro.campoNomeCliente : TEXTOS.cadastro.campoNomeAgente}
+          label={ehCliente ? TEXTOS.camposCliente.nome : TEXTOS.cadastro.campoNomeAgente}
           value={formulario.nome}
           onChange={alterarCampo('nome')}
           required
@@ -118,28 +118,28 @@ export function PaginaCadastro() {
           <>
             <Box sx={estilos.linhaDupla}>
               <TextField
-                label={TEXTOS.cadastro.campoCpf}
-                placeholder={TEXTOS.cadastro.exemploCpf}
+                label={TEXTOS.camposCliente.cpf}
+                placeholder={TEXTOS.camposCliente.exemploCpf}
                 value={formulario.cpf}
                 onChange={alterarCampo('cpf')}
                 required
               />
               <TextField
-                label={TEXTOS.cadastro.campoRg}
+                label={TEXTOS.camposCliente.rg}
                 value={formulario.rg}
                 onChange={alterarCampo('rg')}
                 required
               />
             </Box>
             <TextField
-              label={TEXTOS.cadastro.campoEndereco}
+              label={TEXTOS.camposCliente.endereco}
               value={formulario.endereco}
               onChange={alterarCampo('endereco')}
               required
               fullWidth
             />
             <TextField
-              label={TEXTOS.cadastro.campoProfissao}
+              label={TEXTOS.camposCliente.profissao}
               value={formulario.profissao}
               onChange={alterarCampo('profissao')}
               required

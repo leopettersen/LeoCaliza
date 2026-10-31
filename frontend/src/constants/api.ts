@@ -19,4 +19,7 @@ export const ENDPOINTS = {
     login: '/auth/login',
     cadastro: '/auth/register',
   },
+  clientes: {
+    meuCadastro: '/clientes/me',
+  },
 } as const
