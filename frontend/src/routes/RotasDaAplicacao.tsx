@@ -6,6 +6,7 @@ import { PaginaPedidosRecebidos } from '../pages/agente/PaginaPedidosRecebidos.t
 import { PaginaCadastro } from '../pages/auth/PaginaCadastro.tsx'
 import { PaginaLogin } from '../pages/auth/PaginaLogin.tsx'
 import { PaginaDetalhePedido } from '../pages/cliente/PaginaDetalhePedido.tsx'
+import { PaginaEditarPedido } from '../pages/cliente/PaginaEditarPedido.tsx'
 import { PaginaMeuCadastro } from '../pages/cliente/PaginaMeuCadastro.tsx'
 import { PaginaMeusPedidos } from '../pages/cliente/PaginaMeusPedidos.tsx'
 import { PaginaNovoPedido } from '../pages/cliente/PaginaNovoPedido.tsx'
@@ -24,6 +25,7 @@ export function RotasDaAplicacao() {
           <Route path={ROTAS.cliente.pedidos} element={<PaginaMeusPedidos />} />
           <Route path={ROTAS.cliente.novoPedido} element={<PaginaNovoPedido />} />
           <Route path={ROTAS.cliente.detalhePedido} element={<PaginaDetalhePedido />} />
+          <Route path={ROTAS.cliente.editarPedido} element={<PaginaEditarPedido />} />
           <Route path={ROTAS.cliente.meuCadastro} element={<PaginaMeuCadastro />} />
         </Route>
       </Route>

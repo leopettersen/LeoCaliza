@@ -1,5 +1,6 @@
 import { Alert, Box, Button, Paper, Typography, type SxProps, type Theme } from '@mui/material'
 import { useNavigate, useParams } from 'react-router-dom'
+import { AcoesPedido } from '../../components/AcoesPedido.tsx'
 import { AndamentoPedido } from '../../components/AndamentoPedido.tsx'
 import { Carregando } from '../../components/Carregando.tsx'
 import { ListaDados } from '../../components/ListaDados.tsx'
@@ -14,7 +15,7 @@ import { formatarNumeroPedido } from '../../utils/formatacao.ts'
 export function PaginaDetalhePedido() {
   const { id } = useParams()
   const navegar = useNavigate()
-  const { pedido, carregando, erro } = usePedido(Number(id))
+  const { pedido, carregando, erro, recarregar } = usePedido(Number(id))
 
   if (carregando) {
     return <Carregando />
@@ -47,6 +48,9 @@ export function PaginaDetalhePedido() {
             {TEXTOS.detalhePedido.secaoDados}
           </Typography>
           <ListaDados itens={montarDadosPedido(pedido)} />
+          <Box sx={estilos.acoes}>
+            <AcoesPedido pedido={pedido} aoCancelar={recarregar} destaque />
+          </Box>
         </Paper>
         <Paper variant="outlined" sx={estilos.cartao}>
           <Typography variant="h6" component="h2">
@@ -82,5 +86,11 @@ const estilos = {
     flexDirection: 'column',
     gap: 2,
     p: 3,
+  },
+  acoes: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    gap: 2,
+    pt: 1,
   },
 } satisfies Record<string, SxProps<Theme>>

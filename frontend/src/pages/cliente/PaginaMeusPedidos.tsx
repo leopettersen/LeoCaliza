@@ -17,6 +17,7 @@ import {
 } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AcoesPedido } from '../../components/AcoesPedido.tsx'
 import { Carregando } from '../../components/Carregando.tsx'
 import { SeloStatus } from '../../components/SeloStatus.tsx'
 import { ROTAS } from '../../constants/rotas.ts'
@@ -44,7 +45,7 @@ export function PaginaMeusPedidos() {
   const navegar = useNavigate()
   const [status, setStatus] = useState<StatusPedido | typeof OPCAO_TODOS>(OPCAO_TODOS)
   const [busca, setBusca] = useState('')
-  const { pedidos, carregando, erro } = usePedidos(status || undefined)
+  const { pedidos, carregando, erro, recarregar } = usePedidos(status || undefined)
   const pedidosFiltrados = useMemo(
     () => pedidos.filter((pedido) => correspondeABusca(pedido, busca)),
     [pedidos, busca],
@@ -121,6 +122,7 @@ export function PaginaMeusPedidos() {
                       >
                         {TEXTOS.meusPedidos.botaoVer}
                       </Button>
+                      <AcoesPedido pedido={pedido} aoCancelar={recarregar} />
                     </Box>
                   </TableCell>
                 </TableRow>

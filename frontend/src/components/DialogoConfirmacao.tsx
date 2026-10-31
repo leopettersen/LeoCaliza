@@ -1,4 +1,14 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
+import {
+  Alert,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  type SxProps,
+  type Theme,
+} from '@mui/material'
 
 interface PropriedadesDialogoConfirmacao {
   aberto: boolean
@@ -7,6 +17,7 @@ interface PropriedadesDialogoConfirmacao {
   rotuloConfirmar: string
   rotuloCancelar: string
   processando?: boolean
+  erro?: string | null
   aoConfirmar: () => void
   aoCancelar: () => void
 }
@@ -18,6 +29,7 @@ export function DialogoConfirmacao({
   rotuloConfirmar,
   rotuloCancelar,
   processando = false,
+  erro = null,
   aoConfirmar,
   aoCancelar,
 }: PropriedadesDialogoConfirmacao) {
@@ -26,6 +38,11 @@ export function DialogoConfirmacao({
       <DialogTitle>{titulo}</DialogTitle>
       <DialogContent>
         <DialogContentText>{texto}</DialogContentText>
+        {erro && (
+          <Alert severity="error" sx={estilos.erro}>
+            {erro}
+          </Alert>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={aoCancelar} disabled={processando}>
@@ -38,3 +55,9 @@ export function DialogoConfirmacao({
     </Dialog>
   )
 }
+
+const estilos = {
+  erro: {
+    mt: 2,
+  },
+} satisfies Record<string, SxProps<Theme>>

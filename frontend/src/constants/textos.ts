@@ -146,6 +146,21 @@ export const TEXTOS = {
     descricaoModificacao: (usuario: string, data: string) => `${usuario} em ${data}`,
     botaoVoltar: 'Voltar para meus pedidos',
   },
+  acoesPedido: {
+    botaoModificar: 'Modificar',
+    botaoCancelar: 'Cancelar',
+    botaoCancelarPedido: 'Cancelar pedido',
+    tituloConfirmar: 'Cancelar pedido',
+    textoConfirmar: (numero: string) =>
+      `O pedido ${numero} será cancelado e o histórico será mantido. Deseja continuar?`,
+    botaoVoltar: 'Voltar',
+    cancelando: 'Cancelando...',
+  },
+  editarPedido: {
+    titulo: (numero: string) => `Modificar pedido ${numero}`,
+    botaoSalvar: 'Salvar alterações',
+    naoModificavel: 'Este pedido não pode mais ser modificado: apenas pedidos em análise podem ser alterados.',
+  },
   andamento: {
     pedidoEnviado: 'Pedido enviado',
     emAnalise: 'Em análise financeira pelo agente',

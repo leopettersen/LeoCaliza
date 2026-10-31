@@ -18,3 +18,12 @@ export async function criarPedido(dados: DadosPedido) {
   const { data } = await api.post<Pedido>(ENDPOINTS.pedidos.base, dados)
   return data
 }
+
+export async function modificarPedido(id: number, dados: DadosPedido) {
+  const { data } = await api.put<Pedido>(ENDPOINTS.pedidos.porId(id), dados)
+  return data
+}
+
+export async function cancelarPedido(id: number) {
+  await api.delete(ENDPOINTS.pedidos.porId(id))
+}

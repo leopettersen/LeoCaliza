@@ -4,3 +4,7 @@ import { ROTAS } from '../constants/rotas.ts'
 export function obterCaminhoDetalhePedido(id: number) {
   return generatePath(ROTAS.cliente.detalhePedido, { id: String(id) })
 }
+
+export function obterCaminhoEditarPedido(id: number) {
+  return generatePath(ROTAS.cliente.editarPedido, { id: String(id) })
+}

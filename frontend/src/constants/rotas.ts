@@ -6,6 +6,7 @@ export const ROTAS = {
     pedidos: '/cliente/pedidos',
     novoPedido: '/cliente/pedidos/novo',
     detalhePedido: '/cliente/pedidos/:id',
+    editarPedido: '/cliente/pedidos/:id/editar',
     meuCadastro: '/cliente/meu-cadastro',
   },
   agente: {
