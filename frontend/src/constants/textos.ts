@@ -22,6 +22,7 @@ export const TEXTOS = {
   },
   geral: {
     carregando: 'Carregando...',
+    simboloMoeda: 'R$',
   },
   login: {
     titulo: 'Entrar',
@@ -75,6 +76,12 @@ export const TEXTOS = {
   meuCadastro: {
     titulo: 'Meu cadastro',
     secaoIdentificacao: 'Identificação',
+    secaoRendimentos: (maximo: number) => `Rendimentos (máximo ${maximo})`,
+    botaoAdicionarRendimento: '+ Adicionar',
+    campoEntidadeEmpregadora: 'Entidade empregadora',
+    campoRendimentoMensal: 'Rendimento mensal',
+    botaoRemoverRendimento: 'Remover',
+    semRendimentos: 'Nenhum rendimento informado.',
   },
   pedidosRecebidos: {
     titulo: 'Pedidos recebidos',
