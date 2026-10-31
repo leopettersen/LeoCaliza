@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.dto.AvaliacaoRequest;
+import com.example.backend.dto.ContratoCreditoRequest;
 import com.example.backend.dto.PedidoRequest;
 import com.example.backend.dto.PedidoResponse;
 import com.example.backend.model.enums.StatusPedido;
@@ -55,7 +57,7 @@ public class PedidoController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('CLIENTE')")
+    @PreAuthorize("hasAnyRole('CLIENTE', 'AGENTE')")
     public ResponseEntity<PedidoResponse> modificar(@PathVariable Long id,
                                                     @Valid @RequestBody PedidoRequest request,
                                                     Authentication authentication) {
@@ -67,5 +69,27 @@ public class PedidoController {
     public ResponseEntity<Void> cancelar(@PathVariable Long id, Authentication authentication) {
         pedidoService.cancelar(authentication.getName(), id);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/avaliacao")
+    @PreAuthorize("hasRole('AGENTE')")
+    public ResponseEntity<PedidoResponse> avaliar(@PathVariable Long id,
+                                                  @Valid @RequestBody AvaliacaoRequest request,
+                                                  Authentication authentication) {
+        return ResponseEntity.ok(pedidoService.avaliar(authentication.getName(), id, request));
+    }
+
+    @PostMapping("/{id}/credito")
+    @PreAuthorize("hasRole('AGENTE')")
+    public ResponseEntity<PedidoResponse> concederCredito(@PathVariable Long id,
+                                                          @Valid @RequestBody ContratoCreditoRequest request,
+                                                          Authentication authentication) {
+        return ResponseEntity.ok(pedidoService.concederCredito(authentication.getName(), id, request));
+    }
+
+    @PostMapping("/{id}/contrato")
+    @PreAuthorize("hasRole('AGENTE')")
+    public ResponseEntity<PedidoResponse> executarContrato(@PathVariable Long id, Authentication authentication) {
+        return ResponseEntity.ok(pedidoService.executarContrato(authentication.getName(), id));
     }
 }
