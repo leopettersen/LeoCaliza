@@ -7,11 +7,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.backend.dto.LoginRequest;
+import com.example.backend.dto.LoginResponse;
 import com.example.backend.dto.RegisterRequest;
 import com.example.backend.dto.RegisterResponse;
 import com.example.backend.dto.RendimentoRequest;
 import com.example.backend.exception.BadRequestException;
 import com.example.backend.exception.ConflictException;
+import com.example.backend.exception.UnauthorizedException;
 import com.example.backend.model.Agente;
 import com.example.backend.model.Cliente;
 import com.example.backend.model.enums.Perfil;
@@ -28,15 +31,25 @@ public class AuthService {
     private final ClienteRepository clienteRepository;
     private final AgenteRepository agenteRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public AuthService(UsuarioRepository usuarioRepository,
                        ClienteRepository clienteRepository,
                        AgenteRepository agenteRepository,
-                       PasswordEncoder passwordEncoder) {
+                       PasswordEncoder passwordEncoder,
+                       JwtService jwtService) {
         this.usuarioRepository = usuarioRepository;
         this.clienteRepository = clienteRepository;
         this.agenteRepository = agenteRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
+    }
+
+    public LoginResponse login(LoginRequest request) {
+        Usuario usuario = usuarioRepository.findByLogin(request.login())
+                .filter(u -> passwordEncoder.matches(request.senha(), u.getSenhaHash()))
+                .orElseThrow(() -> new UnauthorizedException("Login ou senha inválidos"));
+        return new LoginResponse(jwtService.gerarToken(usuario), "Bearer", usuario.getPerfil());
     }
 
     @Transactional

@@ -29,4 +29,9 @@ public class GlobalExceptionHandler {
                 .orElse("Dados inválidos");
         return ResponseEntity.badRequest().body(Map.of("Erro", campo));
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<Map<String, String>> naoAutorizado(UnauthorizedException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("erro", ex.getMessage()));
+    }
 }
