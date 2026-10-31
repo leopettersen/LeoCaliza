@@ -3,6 +3,7 @@ import { createRoot } from 'react-dom/client'
 import App from './App.tsx'
 import { IMAGENS } from './constants/imagens.ts'
 import { TEXTOS } from './constants/textos.ts'
+import { ProvedorAutenticacao } from './context/AuthContext.tsx'
 import { aplicarTema } from './styles/tema.ts'
 import './styles/global.css'
 
@@ -19,6 +20,8 @@ configurarDocumento()
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <ProvedorAutenticacao>
+      <App />
+    </ProvedorAutenticacao>
   </StrictMode>,
 )
