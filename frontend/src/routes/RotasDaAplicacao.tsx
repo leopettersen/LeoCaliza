@@ -1,4 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
+import { LayoutPrincipal } from '../components/LayoutPrincipal.tsx'
 import { PERFIS } from '../constants/perfis.ts'
 import { ROTAS } from '../constants/rotas.ts'
 import { PaginaPedidosRecebidos } from '../pages/agente/PaginaPedidosRecebidos.tsx'
@@ -19,13 +20,17 @@ export function RotasDaAplicacao() {
         <Route path={ROTAS.cadastro} element={<PaginaCadastro />} />
       </Route>
       <Route element={<RotaProtegida perfisPermitidos={[PERFIS.cliente]} />}>
-        <Route path={ROTAS.cliente.pedidos} element={<PaginaMeusPedidos />} />
-        <Route path={ROTAS.cliente.novoPedido} element={<PaginaNovoPedido />} />
-        <Route path={ROTAS.cliente.detalhePedido} element={<PaginaDetalhePedido />} />
-        <Route path={ROTAS.cliente.meuCadastro} element={<PaginaMeuCadastro />} />
+        <Route element={<LayoutPrincipal />}>
+          <Route path={ROTAS.cliente.pedidos} element={<PaginaMeusPedidos />} />
+          <Route path={ROTAS.cliente.novoPedido} element={<PaginaNovoPedido />} />
+          <Route path={ROTAS.cliente.detalhePedido} element={<PaginaDetalhePedido />} />
+          <Route path={ROTAS.cliente.meuCadastro} element={<PaginaMeuCadastro />} />
+        </Route>
       </Route>
       <Route element={<RotaProtegida perfisPermitidos={[PERFIS.agente]} />}>
-        <Route path={ROTAS.agente.pedidos} element={<PaginaPedidosRecebidos />} />
+        <Route element={<LayoutPrincipal />}>
+          <Route path={ROTAS.agente.pedidos} element={<PaginaPedidosRecebidos />} />
+        </Route>
       </Route>
       <Route path={ROTAS.qualquerOutra} element={<Navigate to={ROTAS.login} replace />} />
     </Routes>

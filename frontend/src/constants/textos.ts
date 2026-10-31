@@ -48,6 +48,16 @@ export const TEXTOS = {
     jaTemCadastro: 'Já tem cadastro?',
     botaoEntrar: 'Entrar',
   },
+  menu: {
+    meusPedidos: 'Meus pedidos',
+    novoPedido: 'Novo pedido',
+    meuCadastro: 'Meu cadastro',
+    pedidosRecebidos: 'Pedidos recebidos',
+    perfilCliente: 'Cliente',
+    perfilAgente: (tipo: string) => `Agente (${tipo})`,
+    separador: ' · ',
+    botaoSair: 'Sair',
+  },
   meusPedidos: {
     titulo: 'Meus pedidos',
   },
