@@ -22,4 +22,12 @@ export const ENDPOINTS = {
   clientes: {
     meuCadastro: '/clientes/me',
   },
+  pedidos: {
+    base: '/pedidos',
+    porId: (id: number) => `/pedidos/${id}`,
+  },
+} as const
+
+export const PARAMETROS_API = {
+  status: 'status',
 } as const

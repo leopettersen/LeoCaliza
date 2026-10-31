@@ -66,6 +66,19 @@ export const TEXTOS = {
   },
   meusPedidos: {
     titulo: 'Meus pedidos',
+    botaoNovoPedido: 'Novo pedido',
+    filtroStatus: 'Status',
+    opcaoTodos: 'Todos',
+    filtroBusca: 'Buscar por automóvel ou nº',
+    colunaNumero: 'Nº',
+    colunaAutomovel: 'Automóvel',
+    colunaPeriodo: 'Período',
+    colunaStatus: 'Status',
+    colunaAcoes: 'Ações',
+    botaoVer: 'Ver',
+    nenhumPedido: 'Nenhum pedido encontrado.',
+    legendaStatus:
+      'Status possíveis: Em análise → Aprovado ou Reprovado (parecer financeiro) → Contrato executado. Cancelado a qualquer momento antes do contrato.',
   },
   novoPedido: {
     titulo: 'Novo pedido de aluguel',
