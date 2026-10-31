@@ -23,7 +23,7 @@ import { extrairMensagemDeErro } from '../../services/api.ts'
 import type { Perfil } from '../../types/auth.ts'
 
 export function PaginaLogin() {
-  const { entrar, sessaoExpirada } = useAutenticacao()
+  const { entrar, avisoSaida } = useAutenticacao()
   const navegar = useNavigate()
   const [login, setLogin] = useState('')
   const [senha, setSenha] = useState('')
@@ -63,7 +63,7 @@ export function PaginaLogin() {
             {TEXTOS.login.subtitulo}
           </Typography>
         </Box>
-        {sessaoExpirada && !erro && <Alert severity="warning">{TEXTOS.login.sessaoExpirada}</Alert>}
+        {avisoSaida && !erro && <Alert severity="info">{avisoSaida}</Alert>}
         {erro && <Alert severity="error">{erro}</Alert>}
         <TextField
           label={TEXTOS.login.campoUsuario}

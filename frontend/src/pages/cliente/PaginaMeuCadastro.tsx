@@ -8,13 +8,17 @@ import {
   type SxProps,
   type Theme,
 } from '@mui/material'
-import { useState, type ChangeEvent } from 'react'
+import { useState, type ChangeEvent, type FormEvent } from 'react'
 import { Carregando } from '../../components/Carregando.tsx'
+import { DialogoConfirmacao } from '../../components/DialogoConfirmacao.tsx'
 import { SecaoFormulario } from '../../components/SecaoFormulario.tsx'
 import { TEXTOS } from '../../constants/textos.ts'
 import { REGRAS_VALIDACAO } from '../../constants/validacao.ts'
+import { useAutenticacao } from '../../hooks/useAutenticacao.ts'
 import { useMeuCadastro } from '../../hooks/useMeuCadastro.ts'
-import type { Cliente } from '../../types/cliente.ts'
+import { extrairMensagemDeErro } from '../../services/api.ts'
+import { atualizarMeuCadastro, excluirMinhaConta } from '../../services/clienteService.ts'
+import type { Cliente, DadosCliente } from '../../types/cliente.ts'
 
 type CampoIdentificacao = 'nome' | 'cpf' | 'rg' | 'endereco' | 'profissao'
 
@@ -38,6 +42,16 @@ function paraRendimentosEmEdicao(cliente: Cliente): RendimentoEmEdicao[] {
   }))
 }
 
+function paraIdentificacao(cliente: Cliente) {
+  return {
+    nome: cliente.nome,
+    cpf: cliente.cpf,
+    rg: cliente.rg,
+    endereco: cliente.endereco,
+    profissao: cliente.profissao,
+  }
+}
+
 export function PaginaMeuCadastro() {
   const { cliente, carregando, erro } = useMeuCadastro()
 
@@ -54,20 +68,70 @@ export function PaginaMeuCadastro() {
 }
 
 function FormularioMeuCadastro({ cliente }: { cliente: Cliente }) {
-  const [identificacao, setIdentificacao] = useState({
-    nome: cliente.nome,
-    cpf: cliente.cpf,
-    rg: cliente.rg,
-    endereco: cliente.endereco,
-    profissao: cliente.profissao,
-  })
-
+  const { sair } = useAutenticacao()
+  const [clienteSalvo, setClienteSalvo] = useState(cliente)
+  const [identificacao, setIdentificacao] = useState(() => paraIdentificacao(cliente))
   const [rendimentos, setRendimentos] = useState(() => paraRendimentosEmEdicao(cliente))
+  const [salvando, setSalvando] = useState(false)
+  const [sucesso, setSucesso] = useState<string | null>(null)
+  const [erro, setErro] = useState<string | null>(null)
+  const [confirmandoExclusao, setConfirmandoExclusao] = useState(false)
+  const [excluindo, setExcluindo] = useState(false)
   const atingiuLimite = rendimentos.length >= REGRAS_VALIDACAO.maximoRendimentos
 
   function alterarCampo(campo: CampoIdentificacao) {
     return (evento: ChangeEvent<HTMLInputElement>) =>
       setIdentificacao((atual) => ({ ...atual, [campo]: evento.target.value }))
+  }
+
+  function preencherCom(dados: Cliente) {
+    setIdentificacao(paraIdentificacao(dados))
+    setRendimentos(paraRendimentosEmEdicao(dados))
+  }
+
+  function montarDadosCliente(): DadosCliente {
+    return {
+      ...identificacao,
+      rendimentos: rendimentos.map((rendimento) => ({
+        entidadeEmpregadora: rendimento.entidadeEmpregadora.trim(),
+        valor: Number(rendimento.valor),
+      })),
+    }
+  }
+
+  async function salvar(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault()
+    setErro(null)
+    setSucesso(null)
+    setSalvando(true)
+    try {
+      const atualizado = await atualizarMeuCadastro(montarDadosCliente())
+      setClienteSalvo(atualizado)
+      preencherCom(atualizado)
+      setSucesso(TEXTOS.meuCadastro.cadastroAtualizado)
+    } catch (falha) {
+      setErro(extrairMensagemDeErro(falha))
+    } finally {
+      setSalvando(false)
+    }
+  }
+
+  function descartar() {
+    setErro(null)
+    setSucesso(null)
+    preencherCom(clienteSalvo)
+  }
+
+  async function excluirConta() {
+    setExcluindo(true)
+    try {
+      await excluirMinhaConta()
+      sair(TEXTOS.meuCadastro.contaExcluida)
+    } catch (falha) {
+      setErro(extrairMensagemDeErro(falha))
+      setConfirmandoExclusao(false)
+      setExcluindo(false)
+    }
   }
 
   function adicionarRendimento() {
@@ -90,7 +154,9 @@ function FormularioMeuCadastro({ cliente }: { cliente: Cliente }) {
   }
 
   return (
-    <Box component="form" sx={estilos.formulario}>
+    <Box component="form" onSubmit={salvar} sx={estilos.formulario}>
+      {sucesso && <Alert severity="success">{sucesso}</Alert>}
+      {erro && <Alert severity="error">{erro}</Alert>}
       <SecaoFormulario titulo={TEXTOS.meuCadastro.secaoIdentificacao}>
         <Box sx={estilos.linhaTripla}>
           <TextField
@@ -171,6 +237,29 @@ function FormularioMeuCadastro({ cliente }: { cliente: Cliente }) {
           </Box>
         ))}
       </SecaoFormulario>
+      <Box sx={estilos.acoes}>
+        <Box sx={estilos.grupoAcoes}>
+          <Button type="submit" variant="contained" size="large" disabled={salvando}>
+            {salvando ? TEXTOS.meuCadastro.salvando : TEXTOS.meuCadastro.botaoSalvar}
+          </Button>
+          <Button variant="outlined" size="large" onClick={descartar} disabled={salvando}>
+            {TEXTOS.meuCadastro.botaoDescartar}
+          </Button>
+        </Box>
+        <Button variant="outlined" color="error" size="large" onClick={() => setConfirmandoExclusao(true)}>
+          {TEXTOS.meuCadastro.botaoExcluirConta}
+        </Button>
+      </Box>
+      <DialogoConfirmacao
+        aberto={confirmandoExclusao}
+        titulo={TEXTOS.meuCadastro.tituloConfirmarExclusao}
+        texto={TEXTOS.meuCadastro.textoConfirmarExclusao}
+        rotuloCancelar={TEXTOS.meuCadastro.botaoCancelarExclusao}
+        rotuloConfirmar={excluindo ? TEXTOS.meuCadastro.excluindo : TEXTOS.meuCadastro.botaoConfirmarExclusao}
+        processando={excluindo}
+        aoCancelar={() => setConfirmandoExclusao(false)}
+        aoConfirmar={excluirConta}
+      />
     </Box>
   )
 }
@@ -195,6 +284,16 @@ const estilos = {
     display: 'grid',
     gridTemplateColumns: { xs: '1fr', md: '1fr 1fr auto' },
     alignItems: 'center',
+    gap: 2,
+  },
+  acoes: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    flexWrap: 'wrap',
+    gap: 2,
+  },
+  grupoAcoes: {
+    display: 'flex',
     gap: 2,
   },
 } satisfies Record<string, SxProps<Theme>>
