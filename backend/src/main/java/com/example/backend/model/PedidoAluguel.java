@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "pedido_aluguel")
@@ -24,7 +23,7 @@ public class PedidoAluguel {
     private Long id;
 
     @Column(name = "data_criacao", nullable = false, updatable = false)
-    private LocalDateTime dataCriacao;
+    private LocalDate dataCriacao;
 
     @Column(name = "data_retirada", nullable = false)
     private LocalDate dataRetirada;
@@ -58,7 +57,7 @@ public class PedidoAluguel {
 
     @PrePersist
     void inicializar() {
-        dataCriacao = LocalDateTime.now();
+        dataCriacao = LocalDate.now();
         if (status == null) {
             status = StatusPedido.EM_ANALISE;
         }
