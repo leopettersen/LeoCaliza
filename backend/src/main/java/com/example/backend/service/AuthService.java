@@ -52,7 +52,7 @@ public class AuthService {
             nome = agente.getNome();
             tipoAgente = agente.getTipo();
         }
-        return new LoginResponse(jwtService.gerarToken(usuario), "Bearer", usuario.getPerfil(), nome, tipoAgente);
+        return new LoginResponse(jwtService.gerarToken(usuario), "Bearer", usuario.getId(), usuario.getPerfil(), nome, tipoAgente);
     }
 
     @Transactional
