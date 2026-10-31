@@ -26,6 +26,7 @@ import type { Pedido } from '../types/pedido.ts'
 import { montarDadosPedido } from '../utils/descricaoPedido.ts'
 import { formatarMoeda } from '../utils/formatacao.ts'
 import { podeAvaliar, podeModificar } from '../utils/regrasPedido.ts'
+import { AcoesContrato } from './AcoesContrato.tsx'
 import { ListaDados, type ItemDado } from './ListaDados.tsx'
 
 type OpcaoParecer = (typeof OPCOES_PARECER)[keyof typeof OPCOES_PARECER]
@@ -136,6 +137,9 @@ export function PainelAvaliacao({ pedido, aoAtualizar }: PropriedadesPainelAvali
       ) : (
         !sucesso && <Alert severity="info">{TEXTOS.painelAvaliacao.avaliacaoIndisponivel}</Alert>
       )}
+      <Divider />
+      <AcoesContrato pedido={pedido} aoAtualizar={aoAtualizar} />
+      <Divider />
       <Button
         variant="outlined"
         size="large"

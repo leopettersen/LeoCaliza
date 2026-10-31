@@ -63,6 +63,11 @@ export interface DadosAvaliacao {
   observacao: string
 }
 
+export interface DadosCredito {
+  valor: number
+  prazoMeses: number
+}
+
 export interface DadosAutomovel {
   matricula: string
   ano: number

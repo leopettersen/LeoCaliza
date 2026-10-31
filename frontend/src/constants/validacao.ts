@@ -9,4 +9,6 @@ export const REGRAS_VALIDACAO = {
   tamanhoMaximoMarcaModelo: 60,
   tamanhoMaximoPlaca: 10,
   tamanhoMaximoObservacao: 500,
+  valorMinimoCredito: 0.01,
+  prazoMinimoCreditoMeses: 1,
 } as const

@@ -18,6 +18,7 @@ interface PropriedadesDialogoConfirmacao {
   rotuloCancelar: string
   processando?: boolean
   erro?: string | null
+  corConfirmar?: 'error' | 'primary'
   aoConfirmar: () => void
   aoCancelar: () => void
 }
@@ -30,6 +31,7 @@ export function DialogoConfirmacao({
   rotuloCancelar,
   processando = false,
   erro = null,
+  corConfirmar = 'error',
   aoConfirmar,
   aoCancelar,
 }: PropriedadesDialogoConfirmacao) {
@@ -48,7 +50,7 @@ export function DialogoConfirmacao({
         <Button onClick={aoCancelar} disabled={processando}>
           {rotuloCancelar}
         </Button>
-        <Button variant="contained" color="error" onClick={aoConfirmar} disabled={processando}>
+        <Button variant="contained" color={corConfirmar} onClick={aoConfirmar} disabled={processando}>
           {rotuloConfirmar}
         </Button>
       </DialogActions>
