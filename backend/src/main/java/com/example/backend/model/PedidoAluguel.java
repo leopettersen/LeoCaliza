@@ -43,6 +43,10 @@ public class PedidoAluguel {
     @JoinColumn(name = "automovel_id", nullable = false)
     private Automovel automovel;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "banco_credito_id")
+    private Agente bancoCredito;
+
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "avaliacao_id", unique = true)
     private AvaliacaoFinanceira avaliacao;

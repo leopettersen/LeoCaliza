@@ -10,6 +10,7 @@ public record PedidoRequest(
         @NotNull @Valid AutomovelRequest automovel,
         @NotNull TipoProprietario tipoProprietario,
         Long proprietarioId,
+        Long bancoCreditoId,
         @NotNull @FutureOrPresent LocalDate dataRetirada,
         @NotNull @FutureOrPresent LocalDate dataDevolucao) {
 }

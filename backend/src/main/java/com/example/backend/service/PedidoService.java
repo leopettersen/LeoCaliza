@@ -56,6 +56,7 @@ public class PedidoService {
         PedidoAluguel pedido = new PedidoAluguel();
         pedido.setCliente(cliente);
         pedido.setAutomovel(registrarAutomovel(cliente, request));
+        pedido.setBancoCredito(buscarBancoCredito(request.bancoCreditoId()));
         pedido.setDataCriacao(LocalDate.now());
         pedido.setDataRetirada(request.dataRetirada());
         pedido.setDataDevolucao(request.dataDevolucao());
@@ -90,6 +91,7 @@ public class PedidoService {
             throw new ConflictException("Só é possível modificar pedido em análise");
         }
         pedido.setAutomovel(registrarAutomovel(pedido.getCliente(), request));
+        pedido.setBancoCredito(buscarBancoCredito(request.bancoCreditoId()));
         pedido.setDataRetirada(request.dataRetirada());
         pedido.setDataDevolucao(request.dataDevolucao());
         return PedidoResponse.from(pedidoRepository.save(pedido));
@@ -151,6 +153,18 @@ public class PedidoService {
             throw new BadRequestException("O agente proprietário não é do tipo " + request.tipoProprietario());
         }
         return agente;
+    }
+
+    private Agente buscarBancoCredito(Long bancoId) {
+        if (bancoId == null) {
+            return null;
+        }
+        Agente banco = agenteRepository.findById(bancoId)
+                .orElseThrow(() -> new NotFoundException("Banco não encontrado"));
+        if (!banco.isBanco()) {
+            throw new BadRequestException("Contrato de crédito só pode ser associado a um banco");
+        }
+        return banco;
     }
 
     private Cliente buscarCliente(String login) {
