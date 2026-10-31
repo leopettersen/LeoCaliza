@@ -1,5 +1,6 @@
 package com.example.backend.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import com.example.backend.model.Agente;
@@ -8,8 +9,8 @@ import com.example.backend.model.enums.StatusPedido;
 
 public record PedidoResponse(
         Long id,
-        Long clienteId,
-        String clienteNome,
+        ClienteResponse cliente,
+        BigDecimal rendaTotal,
         AutomovelResponse automovel,
         Long bancoCreditoId,
         String bancoCreditoNome,
@@ -22,8 +23,8 @@ public record PedidoResponse(
         Agente banco = pedido.getBancoCredito();
         return new PedidoResponse(
                 pedido.getId(),
-                pedido.getCliente().getId(),
-                pedido.getCliente().getNome(),
+                ClienteResponse.from(pedido.getCliente()),
+                pedido.getCliente().calcularRendaTotal(),
                 AutomovelResponse.from(pedido.getAutomovel()),
                 banco == null ? null : banco.getId(),
                 banco == null ? null : banco.getNome(),

@@ -1,5 +1,6 @@
 package com.example.backend.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,5 +46,11 @@ public class Cliente extends Usuario {
   public void removerRendimento(Rendimento rendimento) {
       rendimentos.remove(rendimento);
       rendimento.setCliente(null);
+  }
+
+  public BigDecimal calcularRendaTotal() {
+      return rendimentos.stream()
+              .map(Rendimento::getValor)
+              .reduce(BigDecimal.ZERO, BigDecimal::add);
   }
 }
