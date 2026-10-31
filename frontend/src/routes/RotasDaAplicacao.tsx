@@ -6,10 +6,10 @@ import { PaginaPedidosRecebidos } from '../pages/agente/PaginaPedidosRecebidos.t
 import { PaginaCadastro } from '../pages/auth/PaginaCadastro.tsx'
 import { PaginaLogin } from '../pages/auth/PaginaLogin.tsx'
 import { PaginaDetalhePedido } from '../pages/cliente/PaginaDetalhePedido.tsx'
-import { PaginaEditarPedido } from '../pages/cliente/PaginaEditarPedido.tsx'
 import { PaginaMeuCadastro } from '../pages/cliente/PaginaMeuCadastro.tsx'
 import { PaginaMeusPedidos } from '../pages/cliente/PaginaMeusPedidos.tsx'
 import { PaginaNovoPedido } from '../pages/cliente/PaginaNovoPedido.tsx'
+import { PaginaEditarPedido } from '../pages/compartilhadas/PaginaEditarPedido.tsx'
 import { RotaProtegida } from './RotaProtegida.tsx'
 import { RotaPublica } from './RotaPublica.tsx'
 
@@ -32,6 +32,7 @@ export function RotasDaAplicacao() {
       <Route element={<RotaProtegida perfisPermitidos={[PERFIS.agente]} />}>
         <Route element={<LayoutPrincipal />}>
           <Route path={ROTAS.agente.pedidos} element={<PaginaPedidosRecebidos />} />
+          <Route path={ROTAS.agente.editarPedido} element={<PaginaEditarPedido />} />
         </Route>
       </Route>
       <Route path={ROTAS.qualquerOutra} element={<Navigate to={ROTAS.login} replace />} />

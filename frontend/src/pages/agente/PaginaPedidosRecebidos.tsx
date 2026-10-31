@@ -14,10 +14,13 @@ import {
   type Theme,
 } from '@mui/material'
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { Carregando } from '../../components/Carregando.tsx'
+import { PainelAvaliacao } from '../../components/PainelAvaliacao.tsx'
 import { FiltroStatus, TODOS_OS_STATUS, type OpcaoFiltroStatus } from '../../components/FiltroStatus.tsx'
 import { SeloStatus } from '../../components/SeloStatus.tsx'
 import { LARGURAS } from '../../constants/estilo.ts'
+import { PARAMETROS_URL } from '../../constants/rotas.ts'
 import { STATUS_PEDIDO } from '../../constants/status.ts'
 import { TEXTOS } from '../../constants/textos.ts'
 import { usePedidos } from '../../hooks/usePedidos.ts'
@@ -25,9 +28,14 @@ import { descreverModelo, formatarMoeda } from '../../utils/formatacao.ts'
 
 export function PaginaPedidosRecebidos() {
   const [status, setStatus] = useState<OpcaoFiltroStatus>(TODOS_OS_STATUS)
-  const [selecionadoId, setSelecionadoId] = useState<number | null>(null)
-  const { pedidos, carregando, erro } = usePedidos(status || undefined)
+  const [parametros, setParametros] = useSearchParams()
+  const selecionadoId = Number(parametros.get(PARAMETROS_URL.pedido))
+  const { pedidos, carregando, erro, recarregar } = usePedidos(status || undefined)
   const pedidoSelecionado = pedidos.find((pedido) => pedido.id === selecionadoId) ?? null
+
+  function selecionarPedido(id: number) {
+    setParametros({ [PARAMETROS_URL.pedido]: String(id) }, { replace: true })
+  }
 
   return (
     <Box sx={estilos.pagina}>
@@ -72,7 +80,7 @@ export function PaginaPedidosRecebidos() {
                       <SeloStatus status={pedido.status} />
                     </TableCell>
                     <TableCell>
-                      <Button size="small" variant="outlined" onClick={() => setSelecionadoId(pedido.id)}>
+                      <Button size="small" variant="outlined" onClick={() => selecionarPedido(pedido.id)}>
                         {pedido.status === STATUS_PEDIDO.emAnalise
                           ? TEXTOS.pedidosRecebidos.botaoAvaliar
                           : TEXTOS.pedidosRecebidos.botaoDetalhes}
@@ -88,7 +96,9 @@ export function PaginaPedidosRecebidos() {
           <Typography variant="h6" component="h2">
             {TEXTOS.pedidosRecebidos.secaoAvaliacao}
           </Typography>
-          {!pedidoSelecionado && (
+          {pedidoSelecionado ? (
+            <PainelAvaliacao key={pedidoSelecionado.id} pedido={pedidoSelecionado} aoAtualizar={recarregar} />
+          ) : (
             <Typography variant="body2" color="text.secondary">
               {TEXTOS.pedidosRecebidos.painelVazio}
             </Typography>
@@ -112,7 +122,7 @@ const estilos = {
   },
   colunas: {
     display: 'grid',
-    gridTemplateColumns: { xs: '1fr', lg: `1fr ${LARGURAS.painelResumo}px` },
+    gridTemplateColumns: { xs: '1fr', lg: `1fr ${LARGURAS.painelAvaliacao}px` },
     alignItems: 'start',
     gap: 3,
   },
@@ -131,8 +141,6 @@ const estilos = {
     py: 4,
   },
   painel: {
-    position: { lg: 'sticky' },
-    top: { lg: 96 },
     display: 'flex',
     flexDirection: 'column',
     gap: 2,

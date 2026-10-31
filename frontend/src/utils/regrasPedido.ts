@@ -5,6 +5,10 @@ export function podeModificar(pedido: Pedido) {
   return pedido.status === STATUS_PEDIDO.emAnalise
 }
 
+export function podeAvaliar(pedido: Pedido) {
+  return pedido.status === STATUS_PEDIDO.emAnalise
+}
+
 export function podeCancelar(pedido: Pedido) {
   return pedido.status !== STATUS_PEDIDO.contratoExecutado && pedido.status !== STATUS_PEDIDO.cancelado
 }

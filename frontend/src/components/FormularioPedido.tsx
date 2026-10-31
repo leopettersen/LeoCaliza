@@ -38,13 +38,22 @@ interface PropriedadesFormularioPedido {
   rotuloEnviar: string
   aoEnviar: (dados: DadosPedido) => Promise<void>
   aoCancelar: () => void
+  rotuloClienteProprietario?: string
+  avisoResumo?: string
 }
 
 function buscarNomeAgente(agentes: Agente[], id: string) {
   return agentes.find((agente) => String(agente.id) === id)?.nome ?? TEXTOS.formularioPedido.naoInformado
 }
 
-export function FormularioPedido({ valoresIniciais, rotuloEnviar, aoEnviar, aoCancelar }: PropriedadesFormularioPedido) {
+export function FormularioPedido({
+  valoresIniciais,
+  rotuloEnviar,
+  aoEnviar,
+  aoCancelar,
+  rotuloClienteProprietario = TEXTOS.formularioPedido.voceMesmo,
+  avisoResumo = TEXTOS.formularioPedido.avisoResumo,
+}: PropriedadesFormularioPedido) {
   const { empresas, bancos, erro: erroAgentes } = useAgentes()
   const [valores, setValores] = useState(valoresIniciais)
   const [erro, setErro] = useState<string | null>(null)
@@ -68,7 +77,7 @@ export function FormularioPedido({ valoresIniciais, rotuloEnviar, aoEnviar, aoCa
 
   function descreverProprietario() {
     if (!proprietarioEhAgente) {
-      return TEXTOS.formularioPedido.voceMesmo
+      return rotuloClienteProprietario
     }
     return TEXTOS.formularioPedido.descricaoProprietario(
       ROTULOS_TIPO_PROPRIETARIO[valores.tipoProprietario],
@@ -255,7 +264,7 @@ export function FormularioPedido({ valoresIniciais, rotuloEnviar, aoEnviar, aoCa
           {TEXTOS.formularioPedido.secaoResumo}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {TEXTOS.formularioPedido.avisoResumo}
+          {avisoResumo}
         </Typography>
         <Box sx={estilos.itensResumo}>
           {itensResumo.map((item) => (

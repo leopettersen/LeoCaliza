@@ -22,5 +22,6 @@ export const LARGURAS = {
   conteudo: 1120,
   formulario: 440,
   painelResumo: 320,
+  painelAvaliacao: 400,
   logo: 48,
 } as const

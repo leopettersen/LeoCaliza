@@ -1,5 +1,5 @@
 import { ENDPOINTS, PARAMETROS_API } from '../constants/api.ts'
-import type { DadosPedido, Pedido, StatusPedido } from '../types/pedido.ts'
+import type { DadosAvaliacao, DadosPedido, Pedido, StatusPedido } from '../types/pedido.ts'
 import { api } from './api.ts'
 
 export async function listarPedidos(status?: StatusPedido) {
@@ -21,6 +21,11 @@ export async function criarPedido(dados: DadosPedido) {
 
 export async function modificarPedido(id: number, dados: DadosPedido) {
   const { data } = await api.put<Pedido>(ENDPOINTS.pedidos.porId(id), dados)
+  return data
+}
+
+export async function avaliarPedido(id: number, dados: DadosAvaliacao) {
+  const { data } = await api.post<Pedido>(ENDPOINTS.pedidos.avaliacao(id), dados)
   return data
 }
 

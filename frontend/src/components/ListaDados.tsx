@@ -8,8 +8,8 @@ export interface ItemDado {
 export function ListaDados({ itens }: { itens: ItemDado[] }) {
   return (
     <Box component="dl" sx={estilos.lista}>
-      {itens.map((item) => (
-        <Box key={item.rotulo} sx={estilos.item}>
+      {itens.map((item, indice) => (
+        <Box key={indice} sx={estilos.item}>
           <Typography component="dt" variant="body2" color="text.secondary">
             {item.rotulo}
           </Typography>

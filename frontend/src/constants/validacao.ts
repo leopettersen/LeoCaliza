@@ -8,4 +8,5 @@ export const REGRAS_VALIDACAO = {
   tamanhoMaximoMatricula: 30,
   tamanhoMaximoMarcaModelo: 60,
   tamanhoMaximoPlaca: 10,
+  tamanhoMaximoObservacao: 500,
 } as const

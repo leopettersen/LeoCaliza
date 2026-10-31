@@ -58,6 +58,11 @@ export interface Pedido {
   dataModificacao: string | null
 }
 
+export interface DadosAvaliacao {
+  resultado: boolean
+  observacao: string
+}
+
 export interface DadosAutomovel {
   matricula: string
   ano: number

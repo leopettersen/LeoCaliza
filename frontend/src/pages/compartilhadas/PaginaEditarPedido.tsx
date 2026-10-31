@@ -2,8 +2,10 @@ import { Alert, Box, Button, Typography, type SxProps, type Theme } from '@mui/m
 import { useNavigate, useParams } from 'react-router-dom'
 import { Carregando } from '../../components/Carregando.tsx'
 import { FormularioPedido } from '../../components/FormularioPedido.tsx'
+import { PERFIS } from '../../constants/perfis.ts'
 import { ROTAS } from '../../constants/rotas.ts'
 import { TEXTOS } from '../../constants/textos.ts'
+import { useAutenticacao } from '../../hooks/useAutenticacao.ts'
 import { usePedido } from '../../hooks/usePedido.ts'
 import { obterCaminhoDetalhePedido } from '../../routes/caminhos.ts'
 import { modificarPedido } from '../../services/pedidoService.ts'
@@ -15,7 +17,10 @@ import { podeModificar } from '../../utils/regrasPedido.ts'
 export function PaginaEditarPedido() {
   const { id } = useParams()
   const navegar = useNavigate()
+  const { sessao } = useAutenticacao()
   const { pedido, carregando, erro } = usePedido(Number(id))
+  const ehAgente = sessao?.perfil === PERFIS.agente
+  const rotaLista = ehAgente ? ROTAS.agente.pedidos : ROTAS.cliente.pedidos
 
   if (carregando) {
     return <Carregando />
@@ -26,17 +31,19 @@ export function PaginaEditarPedido() {
       <Box sx={estilos.pagina}>
         <Alert severity={erro ? 'error' : 'info'}>{erro ?? TEXTOS.editarPedido.naoModificavel}</Alert>
         <Box>
-          <Button variant="outlined" onClick={() => navegar(ROTAS.cliente.pedidos)}>
-            {TEXTOS.detalhePedido.botaoVoltar}
+          <Button variant="outlined" onClick={() => navegar(rotaLista)}>
+            {TEXTOS.editarPedido.botaoVoltar}
           </Button>
         </Box>
       </Box>
     )
   }
 
+  const rotaRetorno = ehAgente ? ROTAS.agente.pedidos : obterCaminhoDetalhePedido(pedido.id)
+
   async function salvarAlteracoes(dados: DadosPedido) {
-    const atualizado = await modificarPedido(Number(id), dados)
-    navegar(obterCaminhoDetalhePedido(atualizado.id))
+    await modificarPedido(Number(id), dados)
+    navegar(rotaRetorno)
   }
 
   return (
@@ -48,7 +55,9 @@ export function PaginaEditarPedido() {
         valoresIniciais={paraValoresFormulario(pedido)}
         rotuloEnviar={TEXTOS.editarPedido.botaoSalvar}
         aoEnviar={salvarAlteracoes}
-        aoCancelar={() => navegar(obterCaminhoDetalhePedido(pedido.id))}
+        aoCancelar={() => navegar(rotaRetorno)}
+        rotuloClienteProprietario={ehAgente ? pedido.cliente.nome : undefined}
+        avisoResumo={ehAgente ? TEXTOS.editarPedido.avisoContratante(pedido.cliente.nome) : undefined}
       />
     </Box>
   )

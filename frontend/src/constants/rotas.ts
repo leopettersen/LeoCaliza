@@ -11,9 +11,11 @@ export const ROTAS = {
   },
   agente: {
     pedidos: '/agente/pedidos',
+    editarPedido: '/agente/pedidos/:id/editar',
   },
 } as const
 
 export const PARAMETROS_URL = {
   perfil: 'perfil',
+  pedido: 'pedido',
 } as const

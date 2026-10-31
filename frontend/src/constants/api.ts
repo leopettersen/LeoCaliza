@@ -25,6 +25,7 @@ export const ENDPOINTS = {
   pedidos: {
     base: '/pedidos',
     porId: (id: number) => `/pedidos/${id}`,
+    avaliacao: (id: number) => `/pedidos/${id}/avaliacao`,
   },
   agentes: {
     base: '/agentes',

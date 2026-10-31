@@ -16,6 +16,11 @@ export const ROTULOS_STATUS: Record<StatusPedido, string> = {
   [STATUS_PEDIDO.cancelado]: 'Cancelado',
 }
 
+export const OPCOES_PARECER = {
+  positivo: 'positivo',
+  negativo: 'negativo',
+} as const
+
 export const ESTADOS_ETAPA = {
   concluida: 'concluida',
   atual: 'atual',
