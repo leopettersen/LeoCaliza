@@ -22,6 +22,8 @@ export const TEXTOS = {
   },
   geral: {
     carregando: 'Carregando...',
+    sim: 'Sim',
+    nao: 'Não',
     simboloMoeda: 'R$',
   },
   login: {
@@ -64,11 +66,13 @@ export const TEXTOS = {
     separador: ' · ',
     botaoSair: 'Sair',
   },
+  filtroStatus: {
+    rotulo: 'Status',
+    todos: 'Todos',
+  },
   meusPedidos: {
     titulo: 'Meus pedidos',
     botaoNovoPedido: 'Novo pedido',
-    filtroStatus: 'Status',
-    opcaoTodos: 'Todos',
     filtroBusca: 'Buscar por automóvel ou nº',
     colunaNumero: 'Nº',
     colunaAutomovel: 'Automóvel',
@@ -193,6 +197,16 @@ export const TEXTOS = {
   },
   pedidosRecebidos: {
     titulo: 'Pedidos recebidos',
+    colunaCliente: 'Cliente',
+    colunaAutomovel: 'Automóvel',
+    colunaRendaTotal: 'Renda total',
+    colunaCredito: 'Crédito',
+    colunaStatus: 'Status',
+    botaoAvaliar: 'Avaliar',
+    botaoDetalhes: 'Detalhes',
+    nenhumPedido: 'Nenhum pedido recebido.',
+    secaoAvaliacao: 'Avaliação financeira',
+    painelVazio: 'Selecione um pedido na tabela para ver os dados do cliente e registrar o parecer.',
   },
   erros: {
     generico: 'Não foi possível concluir a operação. Tente novamente.',

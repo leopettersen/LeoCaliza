@@ -12,6 +12,7 @@ export interface CredenciaisLogin {
 export interface RespostaLogin {
   token: string
   tipo: string
+  id: number
   perfil: Perfil
   nome: string
   tipoAgente: TipoAgente | null
@@ -37,6 +38,7 @@ export interface RespostaCadastro {
 
 export interface Sessao {
   token: string
+  id: number
   perfil: Perfil
   nome: string
   tipoAgente: TipoAgente | null

@@ -32,6 +32,10 @@ export function formatarMoeda(valor: number) {
   return formatadorMoeda.format(valor)
 }
 
+export function descreverModelo(automovel: Automovel) {
+  return [automovel.marca, automovel.modelo].join(FORMATOS.separadorPalavras)
+}
+
 export function descreverAutomovel(automovel: Automovel) {
-  return [`${automovel.marca} ${automovel.modelo}`, automovel.placa].join(FORMATOS.separadorAutomovel)
+  return [descreverModelo(automovel), automovel.placa].join(FORMATOS.separadorAutomovel)
 }

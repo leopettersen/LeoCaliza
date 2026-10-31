@@ -2,7 +2,6 @@ import {
   Alert,
   Box,
   Button,
-  MenuItem,
   Paper,
   Table,
   TableBody,
@@ -19,16 +18,14 @@ import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AcoesPedido } from '../../components/AcoesPedido.tsx'
 import { Carregando } from '../../components/Carregando.tsx'
+import { FiltroStatus, TODOS_OS_STATUS, type OpcaoFiltroStatus } from '../../components/FiltroStatus.tsx'
 import { SeloStatus } from '../../components/SeloStatus.tsx'
 import { ROTAS } from '../../constants/rotas.ts'
-import { ROTULOS_STATUS, STATUS_PEDIDO } from '../../constants/status.ts'
 import { TEXTOS } from '../../constants/textos.ts'
 import { usePedidos } from '../../hooks/usePedidos.ts'
 import { obterCaminhoDetalhePedido } from '../../routes/caminhos.ts'
-import type { Pedido, StatusPedido } from '../../types/pedido.ts'
+import type { Pedido } from '../../types/pedido.ts'
 import { descreverAutomovel, formatarNumeroPedido, formatarPeriodo } from '../../utils/formatacao.ts'
-
-const OPCAO_TODOS = ''
 
 function correspondeABusca(pedido: Pedido, busca: string) {
   const termo = busca.trim().toLowerCase()
@@ -43,7 +40,7 @@ function correspondeABusca(pedido: Pedido, busca: string) {
 
 export function PaginaMeusPedidos() {
   const navegar = useNavigate()
-  const [status, setStatus] = useState<StatusPedido | typeof OPCAO_TODOS>(OPCAO_TODOS)
+  const [status, setStatus] = useState<OpcaoFiltroStatus>(TODOS_OS_STATUS)
   const [busca, setBusca] = useState('')
   const { pedidos, carregando, erro, recarregar } = usePedidos(status || undefined)
   const pedidosFiltrados = useMemo(
@@ -62,20 +59,7 @@ export function PaginaMeusPedidos() {
         </Button>
       </Box>
       <Box sx={estilos.filtros}>
-        <TextField
-          select
-          label={TEXTOS.meusPedidos.filtroStatus}
-          value={status}
-          onChange={(evento) => setStatus(evento.target.value as StatusPedido | typeof OPCAO_TODOS)}
-          slotProps={{ select: { displayEmpty: true }, inputLabel: { shrink: true } }}
-        >
-          <MenuItem value={OPCAO_TODOS}>{TEXTOS.meusPedidos.opcaoTodos}</MenuItem>
-          {Object.values(STATUS_PEDIDO).map((opcao) => (
-            <MenuItem key={opcao} value={opcao}>
-              {ROTULOS_STATUS[opcao]}
-            </MenuItem>
-          ))}
-        </TextField>
+        <FiltroStatus valor={status} aoAlterar={setStatus} />
         <TextField
           label={TEXTOS.meusPedidos.filtroBusca}
           value={busca}

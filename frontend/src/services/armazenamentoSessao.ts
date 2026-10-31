@@ -4,7 +4,8 @@ import type { Sessao } from '../types/auth.ts'
 export function lerSessaoSalva(): Sessao | null {
   try {
     const salva = localStorage.getItem(CHAVES_ARMAZENAMENTO.sessao)
-    return salva ? (JSON.parse(salva) as Sessao) : null
+    const sessao = salva ? (JSON.parse(salva) as Partial<Sessao>) : null
+    return sessao && typeof sessao.id === 'number' ? (sessao as Sessao) : null
   } catch {
     return null
   }

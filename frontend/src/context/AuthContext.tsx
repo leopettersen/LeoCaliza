@@ -14,6 +14,7 @@ export function ProvedorAutenticacao({ children }: { children: ReactNode }) {
     const resposta = await fazerLogin(credenciais)
     const novaSessao: Sessao = {
       token: resposta.token,
+      id: resposta.id,
       perfil: resposta.perfil,
       nome: resposta.nome,
       tipoAgente: resposta.tipoAgente,
