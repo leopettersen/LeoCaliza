@@ -22,6 +22,7 @@ import com.example.backend.model.Agente;
 import com.example.backend.model.Automovel;
 import com.example.backend.model.AvaliacaoFinanceira;
 import com.example.backend.model.Cliente;
+import com.example.backend.model.ContratoAluguel;
 import com.example.backend.model.ContratoCredito;
 import com.example.backend.model.PedidoAluguel;
 import com.example.backend.model.Usuario;
@@ -161,6 +162,21 @@ public class PedidoService {
         contrato.setValor(request.valor());
         contrato.setPrazoMeses(request.prazoMeses());
         pedido.setContratoCredito(contrato);
+        return PedidoResponse.from(pedidoRepository.save(pedido));
+    }
+
+    @Transactional
+    public PedidoResponse executarContrato(String login, Long id) {
+        buscarAgente(login);
+        PedidoAluguel pedido = buscarPedido(id);
+        if (pedido.getStatus() != StatusPedido.APROVADO) {
+            throw new ConflictException("Só é possível executar contrato de pedido aprovado");
+        }
+        if (pedido.getBancoCredito() != null && pedido.getContratoCredito() == null) {
+            throw new ConflictException("Aguardando o banco conceder o contrato de crédito");
+        }
+        pedido.setContratoAluguel(new ContratoAluguel());
+        pedido.setStatus(StatusPedido.CONTRATO_EXECUTADO);
         return PedidoResponse.from(pedidoRepository.save(pedido));
     }
 
