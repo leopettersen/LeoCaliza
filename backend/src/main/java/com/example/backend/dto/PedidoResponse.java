@@ -17,7 +17,8 @@ public record PedidoResponse(
         LocalDate dataCriacao,
         LocalDate dataRetirada,
         LocalDate dataDevolucao,
-        StatusPedido status) {
+        StatusPedido status,
+        AvaliacaoResponse avaliacao) {
 
     public static PedidoResponse from(PedidoAluguel pedido) {
         Agente banco = pedido.getBancoCredito();
@@ -31,6 +32,7 @@ public record PedidoResponse(
                 pedido.getDataCriacao(),
                 pedido.getDataRetirada(),
                 pedido.getDataDevolucao(),
-                pedido.getStatus());
+                pedido.getStatus(),
+                pedido.getAvaliacao() == null ? null : AvaliacaoResponse.from(pedido.getAvaliacao()));
     }
 }

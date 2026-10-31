@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.dto.AutomovelRequest;
+import com.example.backend.dto.AvaliacaoRequest;
 import com.example.backend.dto.PedidoRequest;
 import com.example.backend.dto.PedidoResponse;
 import com.example.backend.dto.TipoProprietario;
@@ -17,6 +18,7 @@ import com.example.backend.exception.NotFoundException;
 import com.example.backend.exception.UnauthorizedException;
 import com.example.backend.model.Agente;
 import com.example.backend.model.Automovel;
+import com.example.backend.model.AvaliacaoFinanceira;
 import com.example.backend.model.Cliente;
 import com.example.backend.model.PedidoAluguel;
 import com.example.backend.model.Usuario;
@@ -118,6 +120,22 @@ public class PedidoService {
         pedidoRepository.save(pedido);
     }
 
+    @Transactional
+    public PedidoResponse avaliar(String login, Long id, AvaliacaoRequest request) {
+        Agente agente = buscarAgente(login);
+        PedidoAluguel pedido = buscarPedido(id);
+        if (pedido.getStatus() != StatusPedido.EM_ANALISE) {
+            throw new ConflictException("Só é possível avaliar pedido em análise");
+        }
+        AvaliacaoFinanceira avaliacao = new AvaliacaoFinanceira();
+        avaliacao.setAgente(agente);
+        avaliacao.setResultado(request.resultado());
+        avaliacao.setObservacao(request.observacao());
+        pedido.setAvaliacao(avaliacao);
+        pedido.setStatus(request.resultado() ? StatusPedido.APROVADO : StatusPedido.REPROVADO);
+        return PedidoResponse.from(pedidoRepository.save(pedido));
+    }
+
     private PedidoAluguel buscarPedidoDoCliente(String login, Long id) {
         Cliente cliente = buscarCliente(login);
         PedidoAluguel pedido = buscarPedido(id);
@@ -180,6 +198,11 @@ public class PedidoService {
     private Cliente buscarCliente(String login) {
         return clienteRepository.findByLogin(login)
                 .orElseThrow(() -> new UnauthorizedException("Cliente não encontrado"));
+    }
+
+    private Agente buscarAgente(String login) {
+        return agenteRepository.findByLogin(login)
+                .orElseThrow(() -> new UnauthorizedException("Agente não encontrado"));
     }
 
     private Usuario buscarUsuario(String login) {
