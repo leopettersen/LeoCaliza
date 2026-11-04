@@ -19,7 +19,6 @@ import { PERFIS } from '../constants/perfis.ts'
 import { OPCOES_PARECER } from '../constants/status.ts'
 import { TEXTOS } from '../constants/textos.ts'
 import { REGRAS_VALIDACAO } from '../constants/validacao.ts'
-import { useAutenticacao } from '../hooks/useAutenticacao.ts'
 import { obterCaminhoEditarPedido } from '../routes/caminhos.ts'
 import { extrairMensagemDeErro } from '../services/api.ts'
 import { avaliarPedido } from '../services/pedidoService.ts'
@@ -60,7 +59,6 @@ function montarRendimentos(pedido: Pedido): ItemDado[] {
 
 export function PainelAvaliacao({ pedido, aoAtualizar }: PropriedadesPainelAvaliacao) {
   const navegar = useNavigate()
-  const { sessao } = useAutenticacao()
   const [parecer, setParecer] = useState<OpcaoParecer>(OPCOES_PARECER.positivo)
   const [observacao, setObservacao] = useState('')
   const [registrando, setRegistrando] = useState(false)

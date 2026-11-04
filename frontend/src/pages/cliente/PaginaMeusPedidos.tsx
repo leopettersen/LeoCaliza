@@ -18,6 +18,7 @@ import {
 } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AcoesAceite } from '../../components/AcoesAceite.tsx'
 import { AcoesPedido } from '../../components/AcoesPedido.tsx'
 import { Carregando } from '../../components/Carregando.tsx'
 import { FiltroStatus, TODOS_OS_STATUS, type OpcaoFiltroStatus } from '../../components/FiltroStatus.tsx'
@@ -56,13 +57,11 @@ export function PaginaMeusPedidos() {
       return []
     }
     if (aba === 'enviados') {
-      return pedidos.filter((pedido) => pedido.cliente?.id === sessao.id)
+      return pedidos.filter((pedido) => pedido.cliente.id === sessao.id)
     }
-    return pedidos.filter((pedido) => {
-      const ehProprietarioCliente =
-        pedido.automovel?.tipoProprietario === 'CLIENTE' || pedido.automovel?.proprietarioId === sessao.id
-      return ehProprietarioCliente
-    })
+    return pedidos.filter(
+      (pedido) => pedido.automovel.tipoProprietario === 'CLIENTE' && pedido.automovel.proprietarioId === sessao.id,
+    )
   }, [aba, pedidos, sessao])
 
   const pedidosFiltrados = useMemo(
@@ -82,8 +81,8 @@ export function PaginaMeusPedidos() {
       </Box>
       <Box sx={estilos.abasContainer}>
         <Tabs value={aba} onChange={(_, novoValor) => setAba(novoValor)} aria-label="Separação de pedidos do cliente">
-          <Tab label="Pedidos que o cliente enviou" value="enviados" />
-          <Tab label="Pedidos que ele pode aceitar" value="aceitar" />
+          <Tab label={TEXTOS.meusPedidos.abaEnviados} value="enviados" />
+          <Tab label={TEXTOS.meusPedidos.abaAceitar} value="aceitar" />
         </Tabs>
       </Box>
       <Box sx={estilos.filtros}>
@@ -103,6 +102,7 @@ export function PaginaMeusPedidos() {
             <TableHead>
               <TableRow sx={estilos.linhaCabecalho}>
                 <TableCell>{TEXTOS.meusPedidos.colunaNumero}</TableCell>
+                {aba === 'aceitar' && <TableCell>{TEXTOS.meusPedidos.colunaSolicitante}</TableCell>}
                 <TableCell>{TEXTOS.meusPedidos.colunaAutomovel}</TableCell>
                 <TableCell>{TEXTOS.meusPedidos.colunaPeriodo}</TableCell>
                 <TableCell>{TEXTOS.meusPedidos.colunaStatus}</TableCell>
@@ -112,7 +112,7 @@ export function PaginaMeusPedidos() {
             <TableBody>
               {pedidosFiltrados.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={5} sx={estilos.vazio}>
+                  <TableCell colSpan={aba === 'aceitar' ? 6 : 5} sx={estilos.vazio}>
                     {TEXTOS.meusPedidos.nenhumPedido}
                   </TableCell>
                 </TableRow>
@@ -120,6 +120,7 @@ export function PaginaMeusPedidos() {
               {pedidosFiltrados.map((pedido) => (
                 <TableRow key={pedido.id} hover>
                   <TableCell>{formatarNumeroPedido(pedido.id)}</TableCell>
+                  {aba === 'aceitar' && <TableCell>{pedido.cliente.nome}</TableCell>}
                   <TableCell>{descreverAutomovel(pedido.automovel)}</TableCell>
                   <TableCell>{formatarPeriodo(pedido.dataRetirada, pedido.dataDevolucao)}</TableCell>
                   <TableCell>
@@ -134,7 +135,11 @@ export function PaginaMeusPedidos() {
                       >
                         {TEXTOS.meusPedidos.botaoVer}
                       </Button>
-                      <AcoesPedido pedido={pedido} aoCancelar={recarregar} />
+                      {aba === 'aceitar' ? (
+                        <AcoesAceite pedido={pedido} aoResponder={recarregar} />
+                      ) : (
+                        <AcoesPedido pedido={pedido} aoCancelar={recarregar} />
+                      )}
                     </Box>
                   </TableCell>
                 </TableRow>

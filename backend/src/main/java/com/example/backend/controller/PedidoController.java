@@ -72,7 +72,7 @@ public class PedidoController {
     }
 
     @PostMapping("/{id}/avaliacao")
-    @PreAuthorize("hasRole('AGENTE')")
+    @PreAuthorize("hasAnyRole('CLIENTE', 'AGENTE')")
     public ResponseEntity<PedidoResponse> avaliar(@PathVariable Long id,
                                                   @Valid @RequestBody AvaliacaoRequest request,
                                                   Authentication authentication) {

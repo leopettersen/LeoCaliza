@@ -37,7 +37,7 @@ export function montarDadosPedido(pedido: Pedido): ItemDado[] {
       rotulo: TEXTOS.detalhePedido.rotuloParecer,
       valor: TEXTOS.detalhePedido.descricaoParecer(
         avaliacao.resultado ? TEXTOS.detalhePedido.parecerPositivo : TEXTOS.detalhePedido.parecerNegativo,
-        avaliacao.agenteNome,
+        avaliacao.agenteNome ?? automovel.proprietarioNome,
         formatarDataHora(avaliacao.data),
         avaliacao.observacao,
       ),

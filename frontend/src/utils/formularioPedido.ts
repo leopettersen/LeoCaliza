@@ -43,14 +43,16 @@ export function paraValoresFormulario(pedido: Pedido): ValoresFormularioPedido {
     dataRetirada: pedido.dataRetirada,
     dataDevolucao: pedido.dataDevolucao,
     tipoProprietario: automovel.tipoProprietario,
-    proprietarioId: proprietarioEhCliente ? SEM_SELECAO : String(automovel.proprietarioId),
+    proprietarioId:
+      proprietarioEhCliente && automovel.proprietarioId === pedido.cliente.id
+        ? SEM_SELECAO
+        : String(automovel.proprietarioId),
     associarCredito: pedido.bancoCreditoId !== null,
     bancoCreditoId: pedido.bancoCreditoId === null ? SEM_SELECAO : String(pedido.bancoCreditoId),
   }
 }
 
 export function paraDadosPedido(valores: ValoresFormularioPedido): DadosPedido {
-  const proprietarioEhCliente = valores.tipoProprietario === TIPOS_PROPRIETARIO.cliente
   return {
     automovel: {
       marca: valores.marca.trim(),
@@ -60,7 +62,7 @@ export function paraDadosPedido(valores: ValoresFormularioPedido): DadosPedido {
       matricula: valores.matricula.trim(),
     },
     tipoProprietario: valores.tipoProprietario,
-    proprietarioId: proprietarioEhCliente ? null : Number(valores.proprietarioId),
+    proprietarioId: valores.proprietarioId === SEM_SELECAO ? null : Number(valores.proprietarioId),
     bancoCreditoId: valores.associarCredito ? Number(valores.bancoCreditoId) : null,
     dataRetirada: valores.dataRetirada,
     dataDevolucao: valores.dataDevolucao,

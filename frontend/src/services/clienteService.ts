@@ -1,5 +1,5 @@
 import { ENDPOINTS } from '../constants/api.ts'
-import type { Cliente, DadosCliente } from '../types/cliente.ts'
+import type { Cliente, ClienteResumo, DadosCliente } from '../types/cliente.ts'
 import { api } from './api.ts'
 
 export async function consultarMeuCadastro() {
@@ -14,4 +14,9 @@ export async function atualizarMeuCadastro(dados: DadosCliente) {
 
 export async function excluirMinhaConta() {
   await api.delete(ENDPOINTS.clientes.meuCadastro)
+}
+
+export async function listarClientesProprietarios() {
+  const { data } = await api.get<ClienteResumo[]>(ENDPOINTS.clientes.proprietarios)
+  return data
 }

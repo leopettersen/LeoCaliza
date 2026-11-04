@@ -23,6 +23,7 @@ import { ROTULOS_TIPO_PROPRIETARIO } from '../constants/rotulos.ts'
 import { TEXTOS } from '../constants/textos.ts'
 import { REGRAS_VALIDACAO } from '../constants/validacao.ts'
 import { useAgentes } from '../hooks/useAgentes.ts'
+import { useClientesProprietarios } from '../hooks/useClientesProprietarios.ts'
 import { extrairMensagemDeErro } from '../services/api.ts'
 import type { Agente } from '../types/agente.ts'
 import type { DadosPedido, TipoProprietario } from '../types/pedido.ts'
@@ -42,7 +43,7 @@ interface PropriedadesFormularioPedido {
   avisoResumo?: string
 }
 
-function buscarNomeAgente(agentes: Agente[], id: string) {
+function buscarNomeAgente(agentes: Pick<Agente, 'id' | 'nome'>[], id: string) {
   return agentes.find((agente) => String(agente.id) === id)?.nome ?? TEXTOS.formularioPedido.naoInformado
 }
 
@@ -55,6 +56,7 @@ export function FormularioPedido({
   avisoResumo = TEXTOS.formularioPedido.avisoResumo,
 }: PropriedadesFormularioPedido) {
   const { empresas, bancos, erro: erroAgentes } = useAgentes()
+  const { clientes } = useClientesProprietarios()
   const [valores, setValores] = useState(valoresIniciais)
   const [erro, setErro] = useState<string | null>(null)
   const [enviando, setEnviando] = useState(false)
@@ -77,7 +79,9 @@ export function FormularioPedido({
 
   function descreverProprietario() {
     if (!proprietarioEhAgente) {
-      return rotuloClienteProprietario
+      return valores.proprietarioId === SEM_SELECAO
+        ? rotuloClienteProprietario
+        : buscarNomeAgente(clientes, valores.proprietarioId)
     }
     return TEXTOS.formularioPedido.descricaoProprietario(
       ROTULOS_TIPO_PROPRIETARIO[valores.tipoProprietario],
@@ -209,6 +213,23 @@ export function FormularioPedido({
               ))}
             </RadioGroup>
           </FormControl>
+          {!proprietarioEhAgente && (
+            <TextField
+              select
+              label={TEXTOS.formularioPedido.campoClienteProprietario}
+              value={valores.proprietarioId}
+              onChange={alterarCampo('proprietarioId')}
+              helperText={TEXTOS.formularioPedido.ajudaClienteProprietario}
+              slotProps={{ select: { displayEmpty: true }, inputLabel: { shrink: true } }}
+            >
+              <MenuItem value={SEM_SELECAO}>{rotuloClienteProprietario}</MenuItem>
+              {clientes.map((cliente) => (
+                <MenuItem key={cliente.id} value={String(cliente.id)}>
+                  {cliente.nome}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
           {proprietarioEhAgente && (
             <TextField
               select

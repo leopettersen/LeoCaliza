@@ -23,8 +23,8 @@ export interface AvaliacaoFinanceira {
   resultado: boolean
   observacao: string
   data: string
-  agenteId: number
-  agenteNome: string
+  agenteId: number | null
+  agenteNome: string | null
 }
 
 export interface ContratoCredito {

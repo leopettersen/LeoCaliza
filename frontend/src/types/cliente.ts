@@ -15,6 +15,11 @@ export interface Cliente {
   rendimentos: Rendimento[]
 }
 
+export interface ClienteResumo {
+  id: number
+  nome: string
+}
+
 export interface DadosCliente {
   nome: string
   rg: string

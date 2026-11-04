@@ -21,6 +21,7 @@ export const ENDPOINTS = {
   },
   clientes: {
     meuCadastro: '/clientes/me',
+    proprietarios: '/clientes/proprietarios',
   },
   pedidos: {
     base: '/pedidos',

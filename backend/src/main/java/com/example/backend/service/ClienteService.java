@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.example.backend.dto.ClienteRequest;
 import com.example.backend.dto.ClienteResponse;
+import com.example.backend.dto.ClienteResumoResponse;
 import com.example.backend.dto.RegisterRequest;
 import com.example.backend.dto.RendimentoRequest;
 import com.example.backend.exception.BadRequestException;
@@ -57,6 +58,11 @@ public class ClienteService {
     @Transactional(readOnly = true)
     public ClienteResponse consultar(String login) {
         return ClienteResponse.from(buscarCliente(login));
+    }
+
+    @Transactional(readOnly = true)
+    public List<ClienteResumoResponse> listarResumo() {
+        return clienteRepository.findAll().stream().map(ClienteResumoResponse::from).toList();
     }
 
     @Transactional

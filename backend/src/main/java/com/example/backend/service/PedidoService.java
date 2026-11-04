@@ -165,24 +165,10 @@ public class PedidoService {
     public PedidoResponse avaliar(String login, Long id, AvaliacaoRequest request) {
         Usuario usuario = buscarUsuario(login);
         PedidoAluguel pedido = buscarPedido(id);
-        boolean podeAvaliar = false;
-        Agente agenteAvaliador = null;
-        if (usuario instanceof Agente agente) {
-            if (ehEnvolvidoComoAgente(pedido, agente)) {
-                podeAvaliar = true;
-                agenteAvaliador = agente;
-            }
-        } else if (usuario instanceof Cliente cliente) {
-            if (pedido.getAutomovel() != null && pedido.getAutomovel().getProprietario() != null
-                    && pedido.getAutomovel().getProprietario().getId().equals(cliente.getId())) {
-                podeAvaliar = true;
-                agenteAvaliador = null;
-            } else if (ehEnvolvidoComoCliente(pedido, cliente)) {
-                // também permitir se for o proprietário do tipo cliente
-                podeAvaliar = true;
-                agenteAvaliador = null;
-            }
-        }
+        boolean ehProprietario = pedido.getAutomovel().getProprietario().getId().equals(usuario.getId());
+        boolean podeAvaliar = usuario instanceof Agente
+                ? ehEnvolvidoComoAgente(pedido, usuario)
+                : ehProprietario;
         if (!podeAvaliar) {
             throw new ForbiddenException("Pedido não envolve este usuário para avaliação");
         }
@@ -190,9 +176,7 @@ public class PedidoService {
             throw new ConflictException("Só é possível avaliar pedido em análise");
         }
         AvaliacaoFinanceira avaliacao = new AvaliacaoFinanceira();
-        if (agenteAvaliador != null) {
-            avaliacao.setAgente(agenteAvaliador);
-        } else if (usuario instanceof Agente agente) {
+        if (usuario instanceof Agente agente) {
             avaliacao.setAgente(agente);
         }
         avaliacao.setResultado(request.resultado());
@@ -301,7 +285,11 @@ public class PedidoService {
 
     private Usuario buscarProprietario(Cliente cliente, PedidoRequest request) {
         if (request.tipoProprietario() == TipoProprietario.CLIENTE) {
-            return cliente;
+            if (request.proprietarioId() == null || request.proprietarioId().equals(cliente.getId())) {
+                return cliente;
+            }
+            return clienteRepository.findById(request.proprietarioId())
+                    .orElseThrow(() -> new NotFoundException("Cliente proprietário não encontrado"));
         }
         if (request.proprietarioId() == null) {
             throw new BadRequestException("Informe a empresa ou o banco proprietário do automóvel");
