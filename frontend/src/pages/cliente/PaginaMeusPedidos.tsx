@@ -3,12 +3,14 @@ import {
   Box,
   Button,
   Paper,
+  Tab,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Tabs,
   TextField,
   Typography,
   type SxProps,
@@ -22,6 +24,7 @@ import { FiltroStatus, TODOS_OS_STATUS, type OpcaoFiltroStatus } from '../../com
 import { SeloStatus } from '../../components/SeloStatus.tsx'
 import { ROTAS } from '../../constants/rotas.ts'
 import { TEXTOS } from '../../constants/textos.ts'
+import { useAutenticacao } from '../../hooks/useAutenticacao.ts'
 import { usePedidos } from '../../hooks/usePedidos.ts'
 import { obterCaminhoDetalhePedido } from '../../routes/caminhos.ts'
 import type { Pedido } from '../../types/pedido.ts'
@@ -38,14 +41,33 @@ function correspondeABusca(pedido: Pedido, busca: string) {
   )
 }
 
+type AbaPedidos = 'enviados' | 'aceitar'
+
 export function PaginaMeusPedidos() {
   const navegar = useNavigate()
+  const { sessao } = useAutenticacao()
+  const [aba, setAba] = useState<AbaPedidos>('enviados')
   const [status, setStatus] = useState<OpcaoFiltroStatus>(TODOS_OS_STATUS)
   const [busca, setBusca] = useState('')
   const { pedidos, carregando, erro, recarregar } = usePedidos(status || undefined)
+
+  const pedidosPorAba = useMemo(() => {
+    if (!sessao) {
+      return []
+    }
+    if (aba === 'enviados') {
+      return pedidos.filter((pedido) => pedido.cliente?.id === sessao.id)
+    }
+    return pedidos.filter((pedido) => {
+      const ehProprietarioCliente =
+        pedido.automovel?.tipoProprietario === 'CLIENTE' || pedido.automovel?.proprietarioId === sessao.id
+      return ehProprietarioCliente
+    })
+  }, [aba, pedidos, sessao])
+
   const pedidosFiltrados = useMemo(
-    () => pedidos.filter((pedido) => correspondeABusca(pedido, busca)),
-    [pedidos, busca],
+    () => pedidosPorAba.filter((pedido) => correspondeABusca(pedido, busca)),
+    [pedidosPorAba, busca],
   )
 
   return (
@@ -57,6 +79,12 @@ export function PaginaMeusPedidos() {
         <Button variant="contained" size="large" onClick={() => navegar(ROTAS.cliente.novoPedido)}>
           {TEXTOS.meusPedidos.botaoNovoPedido}
         </Button>
+      </Box>
+      <Box sx={estilos.abasContainer}>
+        <Tabs value={aba} onChange={(_, novoValor) => setAba(novoValor)} aria-label="Separação de pedidos do cliente">
+          <Tab label="Pedidos que o cliente enviou" value="enviados" />
+          <Tab label="Pedidos que ele pode aceitar" value="aceitar" />
+        </Tabs>
       </Box>
       <Box sx={estilos.filtros}>
         <FiltroStatus valor={status} aoAlterar={setStatus} />
@@ -134,6 +162,10 @@ const estilos = {
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     gap: 2,
+  },
+  abasContainer: {
+    borderBottom: 1,
+    borderColor: 'divider',
   },
   filtros: {
     display: 'grid',

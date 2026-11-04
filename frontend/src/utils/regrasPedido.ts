@@ -8,8 +8,19 @@ export function podeModificar(pedido: Pedido) {
   return pedido.status === STATUS_PEDIDO.emAnalise
 }
 
-export function podeAvaliar(pedido: Pedido) {
-  return pedido.status === STATUS_PEDIDO.emAnalise
+export function podeAvaliar(pedido: Pedido, sessao?: Sessao | null) {
+  if (pedido.status !== STATUS_PEDIDO.emAnalise) {
+    return false
+  }
+  if (sessao) {
+    if (pedido.automovel?.tipoProprietario === 'CLIENTE' && pedido.automovel?.proprietarioId === sessao.id) {
+      return true
+    }
+    if (pedido.cliente?.id === sessao.id && pedido.automovel?.proprietarioId === sessao.id) {
+      return true
+    }
+  }
+  return true
 }
 
 export function podeCancelar(pedido: Pedido) {

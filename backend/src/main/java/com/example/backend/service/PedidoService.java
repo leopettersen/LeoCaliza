@@ -74,19 +74,58 @@ public class PedidoService {
     public List<PedidoResponse> listar(String login, StatusPedido status) {
         Usuario usuario = buscarUsuario(login);
         List<PedidoAluguel> pedidos = usuario.getPerfil() == Perfil.AGENTE
-                ? listarTodos(status)
-                : listarDoCliente(login, status);
+                ? listarParaAgente(usuario, status)
+                : listarParaCliente(usuario, status);
         return pedidos.stream().map(PedidoResponse::from).toList();
     }
 
-    private List<PedidoAluguel> listarTodos(StatusPedido status) {
-        return status == null ? pedidoRepository.findAll() : pedidoRepository.findByStatus(status);
+    private List<PedidoAluguel> listarParaAgente(Usuario usuario, StatusPedido status) {
+        List<PedidoAluguel> pedidos = status == null ? pedidoRepository.findAll() : pedidoRepository.findByStatus(status);
+        return pedidos.stream()
+                .filter(pedido -> ehEnvolvidoComoAgente(pedido, usuario))
+                .toList();
     }
 
-    private List<PedidoAluguel> listarDoCliente(String login, StatusPedido status) {
-        return status == null
-                ? pedidoRepository.findByClienteLogin(login)
-                : pedidoRepository.findByClienteLoginAndStatus(login, status);
+    private List<PedidoAluguel> listarParaCliente(Usuario usuario, StatusPedido status) {
+        List<PedidoAluguel> pedidos = status == null
+                ? pedidoRepository.findAll()
+                : pedidoRepository.findByStatus(status);
+        return pedidos.stream()
+                .filter(pedido -> ehEnvolvidoComoCliente(pedido, usuario))
+                .toList();
+    }
+
+    private boolean ehEnvolvidoComoCliente(PedidoAluguel pedido, Usuario usuario) {
+        if (pedido.getCliente() != null && pedido.getCliente().getId().equals(usuario.getId())) {
+            return true;
+        }
+        if (pedido.getAutomovel() != null && pedido.getAutomovel().getProprietario() != null
+                && pedido.getAutomovel().getProprietario().getId().equals(usuario.getId())) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean ehEnvolvidoComoAgente(PedidoAluguel pedido, Usuario usuario) {
+        if (pedido.getAutomovel() != null && pedido.getAutomovel().getProprietario() != null
+                && pedido.getAutomovel().getProprietario().getId().equals(usuario.getId())) {
+            return true;
+        }
+        if (pedido.getBancoCredito() != null && pedido.getBancoCredito().getId().equals(usuario.getId())) {
+            return true;
+        }
+        if (pedido.getAvaliacao() != null && pedido.getAvaliacao().getAgente() != null
+                && pedido.getAvaliacao().getAgente().getId().equals(usuario.getId())) {
+            return true;
+        }
+        if (pedido.getContratoCredito() != null && pedido.getContratoCredito().getAgente() != null
+                && pedido.getContratoCredito().getAgente().getId().equals(usuario.getId())) {
+            return true;
+        }
+        if (pedido.getModificadoPor() != null && pedido.getModificadoPor().getId().equals(usuario.getId())) {
+            return true;
+        }
+        return false;
     }
 
     @Transactional(readOnly = true)
@@ -124,13 +163,38 @@ public class PedidoService {
 
     @Transactional
     public PedidoResponse avaliar(String login, Long id, AvaliacaoRequest request) {
-        Agente agente = buscarAgente(login);
+        Usuario usuario = buscarUsuario(login);
         PedidoAluguel pedido = buscarPedido(id);
+        boolean podeAvaliar = false;
+        Agente agenteAvaliador = null;
+        if (usuario instanceof Agente agente) {
+            if (ehEnvolvidoComoAgente(pedido, agente)) {
+                podeAvaliar = true;
+                agenteAvaliador = agente;
+            }
+        } else if (usuario instanceof Cliente cliente) {
+            if (pedido.getAutomovel() != null && pedido.getAutomovel().getProprietario() != null
+                    && pedido.getAutomovel().getProprietario().getId().equals(cliente.getId())) {
+                podeAvaliar = true;
+                agenteAvaliador = null;
+            } else if (ehEnvolvidoComoCliente(pedido, cliente)) {
+                // também permitir se for o proprietário do tipo cliente
+                podeAvaliar = true;
+                agenteAvaliador = null;
+            }
+        }
+        if (!podeAvaliar) {
+            throw new ForbiddenException("Pedido não envolve este usuário para avaliação");
+        }
         if (pedido.getStatus() != StatusPedido.EM_ANALISE) {
             throw new ConflictException("Só é possível avaliar pedido em análise");
         }
         AvaliacaoFinanceira avaliacao = new AvaliacaoFinanceira();
-        avaliacao.setAgente(agente);
+        if (agenteAvaliador != null) {
+            avaliacao.setAgente(agenteAvaliador);
+        } else if (usuario instanceof Agente agente) {
+            avaliacao.setAgente(agente);
+        }
         avaliacao.setResultado(request.resultado());
         avaliacao.setObservacao(request.observacao());
         pedido.setAvaliacao(avaliacao);
@@ -145,6 +209,9 @@ public class PedidoService {
             throw new ForbiddenException("Apenas bancos concedem contrato de crédito");
         }
         PedidoAluguel pedido = buscarPedido(id);
+        if (!ehEnvolvidoComoAgente(pedido, agente)) {
+            throw new ForbiddenException("Pedido não envolve este agente");
+        }
         if (pedido.getBancoCredito() == null) {
             throw new ConflictException("Pedido não solicitou contrato de crédito");
         }
@@ -167,8 +234,11 @@ public class PedidoService {
 
     @Transactional
     public PedidoResponse executarContrato(String login, Long id) {
-        buscarAgente(login);
+        Agente agente = buscarAgente(login);
         PedidoAluguel pedido = buscarPedido(id);
+        if (!ehEnvolvidoComoAgente(pedido, agente)) {
+            throw new ForbiddenException("Pedido não envolve este agente");
+        }
         if (pedido.getStatus() != StatusPedido.APROVADO) {
             throw new ConflictException("Só é possível executar contrato de pedido aprovado");
         }
@@ -182,8 +252,17 @@ public class PedidoService {
 
     private PedidoAluguel buscarPedidoVisivel(Usuario usuario, Long id) {
         PedidoAluguel pedido = buscarPedido(id);
-        if (usuario.getPerfil() == Perfil.CLIENTE && !pedido.getCliente().getId().equals(usuario.getId())) {
-            throw new ForbiddenException("Pedido pertence a outro cliente");
+        if (usuario.getPerfil() == Perfil.CLIENTE) {
+            if (!ehEnvolvidoComoCliente(pedido, usuario)) {
+                throw new ForbiddenException("Pedido pertence a outro cliente");
+            }
+            return pedido;
+        }
+        if (usuario.getPerfil() == Perfil.AGENTE) {
+            if (!ehEnvolvidoComoAgente(pedido, usuario)) {
+                throw new ForbiddenException("Pedido não envolve este agente");
+            }
+            return pedido;
         }
         return pedido;
     }

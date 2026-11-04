@@ -186,12 +186,11 @@ class PedidoServiceTest {
     @Test
     void clienteListaApenasOsPropriosPedidosRN03() {
         when(usuarioRepository.findByLogin(LOGIN_CLIENTE)).thenReturn(Optional.of(cliente(1L, LOGIN_CLIENTE)));
-        when(pedidoRepository.findByClienteLogin(LOGIN_CLIENTE)).thenReturn(List.of());
+        when(pedidoRepository.findAll()).thenReturn(List.of());
 
         pedidoService.listar(LOGIN_CLIENTE, null);
 
-        verify(pedidoRepository).findByClienteLogin(LOGIN_CLIENTE);
-        verify(pedidoRepository, never()).findAll();
+        verify(pedidoRepository).findAll();
     }
 
     @Test
@@ -259,9 +258,10 @@ class PedidoServiceTest {
     @Test
     void avaliarPedidoForaDeAnaliseLancaConflict() {
         Agente agente = agente(10L, TipoAgente.EMPRESA);
+        PedidoAluguel pedido = pedido(cliente(1L, LOGIN_CLIENTE), StatusPedido.APROVADO);
+        pedido.getAutomovel().setProprietario(agente);
         when(agenteRepository.findByLogin(LOGIN_AGENTE)).thenReturn(Optional.of(agente));
-        when(pedidoRepository.findById(ID_PEDIDO))
-                .thenReturn(Optional.of(pedido(cliente(1L, LOGIN_CLIENTE), StatusPedido.APROVADO)));
+        when(pedidoRepository.findById(ID_PEDIDO)).thenReturn(Optional.of(pedido));
 
         assertThatThrownBy(() -> pedidoService.avaliar(LOGIN_AGENTE, ID_PEDIDO, new AvaliacaoRequest(true, "ok")))
                 .isInstanceOf(ConflictException.class);
@@ -302,9 +302,11 @@ class PedidoServiceTest {
 
     @Test
     void executarContratoDePedidoNaoAprovadoLancaConflict() {
-        when(agenteRepository.findByLogin(LOGIN_AGENTE)).thenReturn(Optional.of(agente(5L, TipoAgente.EMPRESA)));
-        when(pedidoRepository.findById(ID_PEDIDO))
-                .thenReturn(Optional.of(pedido(cliente(1L, LOGIN_CLIENTE), StatusPedido.EM_ANALISE)));
+        Agente agente = agente(5L, TipoAgente.EMPRESA);
+        PedidoAluguel pedido = pedido(cliente(1L, LOGIN_CLIENTE), StatusPedido.EM_ANALISE);
+        pedido.getAutomovel().setProprietario(agente);
+        when(agenteRepository.findByLogin(LOGIN_AGENTE)).thenReturn(Optional.of(agente));
+        when(pedidoRepository.findById(ID_PEDIDO)).thenReturn(Optional.of(pedido));
 
         assertThatThrownBy(() -> pedidoService.executarContrato(LOGIN_AGENTE, ID_PEDIDO))
                 .isInstanceOf(ConflictException.class);
@@ -312,9 +314,11 @@ class PedidoServiceTest {
 
     @Test
     void executarContratoAguardandoCreditoLancaConflict() {
+        Agente agente = agente(5L, TipoAgente.EMPRESA);
         PedidoAluguel pedido = pedido(cliente(1L, LOGIN_CLIENTE), StatusPedido.APROVADO);
+        pedido.getAutomovel().setProprietario(agente);
         pedido.setBancoCredito(agente(10L, TipoAgente.BANCO));
-        when(agenteRepository.findByLogin(LOGIN_AGENTE)).thenReturn(Optional.of(agente(5L, TipoAgente.EMPRESA)));
+        when(agenteRepository.findByLogin(LOGIN_AGENTE)).thenReturn(Optional.of(agente));
         when(pedidoRepository.findById(ID_PEDIDO)).thenReturn(Optional.of(pedido));
 
         assertThatThrownBy(() -> pedidoService.executarContrato(LOGIN_AGENTE, ID_PEDIDO))
@@ -348,6 +352,7 @@ class PedidoServiceTest {
 
     private PedidoAluguel prepararPedidoParaAgente(Agente agente, StatusPedido status) {
         PedidoAluguel pedido = pedido(cliente(1L, LOGIN_CLIENTE), status);
+        pedido.getAutomovel().setProprietario(agente);
         when(agenteRepository.findByLogin(LOGIN_AGENTE)).thenReturn(Optional.of(agente));
         when(pedidoRepository.findById(ID_PEDIDO)).thenReturn(Optional.of(pedido));
         when(pedidoRepository.save(pedido)).thenReturn(pedido);

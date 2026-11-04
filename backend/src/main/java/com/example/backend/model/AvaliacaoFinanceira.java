@@ -29,8 +29,8 @@ public class AvaliacaoFinanceira {
     @Column(nullable = false)
     private LocalDateTime data;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "agente_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "agente_id")
     private Agente agente;
 
     @PrePersist

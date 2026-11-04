@@ -18,7 +18,7 @@ public record AvaliacaoResponse(
                 avaliacao.getResultado(),
                 avaliacao.getObservacao(),
                 avaliacao.getData(),
-                avaliacao.getAgente().getId(),
-                avaliacao.getAgente().getNome());
+                avaliacao.getAgente() == null ? null : avaliacao.getAgente().getId(),
+                avaliacao.getAgente() == null ? null : avaliacao.getAgente().getNome());
     }
 }
