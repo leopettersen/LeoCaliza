@@ -23,6 +23,7 @@ import { ROTULOS_TIPO_PROPRIETARIO } from '../constants/rotulos.ts'
 import { TEXTOS } from '../constants/textos.ts'
 import { REGRAS_VALIDACAO } from '../constants/validacao.ts'
 import { useAgentes } from '../hooks/useAgentes.ts'
+import { useAutenticacao } from '../hooks/useAutenticacao.ts'
 import { useClientesProprietarios } from '../hooks/useClientesProprietarios.ts'
 import { extrairMensagemDeErro } from '../services/api.ts'
 import type { Agente } from '../types/agente.ts'
@@ -63,6 +64,7 @@ export function FormularioPedido({
   const hoje = obterDataDeHojeIso()
   const proprietarioEhAgente = valores.tipoProprietario !== TIPOS_PROPRIETARIO.cliente
   const agentesProprietarios = valores.tipoProprietario === TIPOS_PROPRIETARIO.banco ? bancos : empresas
+  const { sessao } = useAutenticacao()
 
   function alterarCampo(campo: CampoTexto) {
     return (evento: ChangeEvent<HTMLInputElement>) =>
@@ -79,10 +81,17 @@ export function FormularioPedido({
 
   function descreverProprietario() {
     if (!proprietarioEhAgente) {
-      return valores.proprietarioId === SEM_SELECAO
-        ? rotuloClienteProprietario
-        : buscarNomeAgente(clientes, valores.proprietarioId)
+      if (valores.proprietarioId === SEM_SELECAO) {
+        return rotuloClienteProprietario
+      }
+
+      if (sessao && valores.proprietarioId === String(sessao.id)) {
+        return 'Você'
+      }
+
+      return buscarNomeAgente(clientes, valores.proprietarioId)
     }
+
     return TEXTOS.formularioPedido.descricaoProprietario(
       ROTULOS_TIPO_PROPRIETARIO[valores.tipoProprietario],
       buscarNomeAgente(agentesProprietarios, valores.proprietarioId),
@@ -222,12 +231,23 @@ export function FormularioPedido({
               helperText={TEXTOS.formularioPedido.ajudaClienteProprietario}
               slotProps={{ select: { displayEmpty: true }, inputLabel: { shrink: true } }}
             >
-              <MenuItem value={SEM_SELECAO}>{rotuloClienteProprietario}</MenuItem>
-              {clientes.map((cliente) => (
-                <MenuItem key={cliente.id} value={String(cliente.id)}>
-                  {cliente.nome}
+              <MenuItem value={SEM_SELECAO}>
+                Selecione um cliente
+              </MenuItem>
+
+              {sessao && (
+                <MenuItem value={String(sessao.id)}>
+                  Você
                 </MenuItem>
-              ))}
+              )}
+
+              {clientes
+                .filter((cliente) => !sessao || String(cliente.id) !== String(sessao.id))
+                .map((cliente) => (
+                  <MenuItem key={cliente.id} value={String(cliente.id)}>
+                    {cliente.nome}
+                  </MenuItem>
+                ))}
             </TextField>
           )}
           {proprietarioEhAgente && (
