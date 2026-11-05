@@ -1,7 +1,7 @@
-import type { TipoAgente } from './auth.ts'
+import type { TipoAgente } from '@/types/auth.ts';
 
 export interface Agente {
-  id: number
-  nome: string
-  tipo: TipoAgente
+  id: number;
+  nome: string;
+  tipo: TipoAgente;
 }

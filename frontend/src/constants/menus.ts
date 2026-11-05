@@ -1,11 +1,11 @@
-import type { Perfil } from '../types/auth.ts'
-import { PERFIS } from './perfis.ts'
-import { ROTAS } from './rotas.ts'
-import { TEXTOS } from './textos.ts'
+import type { Perfil } from '@/types/auth.ts';
+import { PERFIS } from '@/constants/perfis.ts';
+import { ROTAS } from '@/constants/rotas.ts';
+import { TEXTOS } from '@/constants/textos.ts';
 
 export interface ItemMenu {
-  rotulo: string
-  rota: string
+  rotulo: string;
+  rota: string;
 }
 
 export const MENUS: Record<Perfil, ItemMenu[]> = {
@@ -15,4 +15,4 @@ export const MENUS: Record<Perfil, ItemMenu[]> = {
     { rotulo: TEXTOS.menu.meuCadastro, rota: ROTAS.cliente.meuCadastro },
   ],
   [PERFIS.agente]: [{ rotulo: TEXTOS.menu.pedidosRecebidos, rota: ROTAS.agente.pedidos }],
-}
+};

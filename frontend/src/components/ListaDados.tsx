@@ -1,8 +1,8 @@
-import { Box, Typography, type SxProps, type Theme } from '@mui/material'
+import { Box, Typography, type SxProps, type Theme } from '@mui/material';
 
 export interface ItemDado {
-  rotulo: string
-  valor: string
+  rotulo: string;
+  valor: string;
 }
 
 export function ListaDados({ itens }: { itens: ItemDado[] }) {
@@ -19,7 +19,7 @@ export function ListaDados({ itens }: { itens: ItemDado[] }) {
         </Box>
       ))}
     </Box>
-  )
+  );
 }
 
 const estilos = {
@@ -36,4 +36,4 @@ const estilos = {
     m: 0,
     overflowWrap: 'anywhere',
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

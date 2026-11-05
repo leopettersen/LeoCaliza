@@ -12,29 +12,29 @@ import {
   Typography,
   type SxProps,
   type Theme,
-} from '@mui/material'
-import { useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
-import { Carregando } from '../../components/Carregando.tsx'
-import { PainelAvaliacao } from '../../components/PainelAvaliacao.tsx'
-import { FiltroStatus, TODOS_OS_STATUS, type OpcaoFiltroStatus } from '../../components/FiltroStatus.tsx'
-import { SeloStatus } from '../../components/SeloStatus.tsx'
-import { LARGURAS } from '../../constants/estilo.ts'
-import { PARAMETROS_URL } from '../../constants/rotas.ts'
-import { STATUS_PEDIDO } from '../../constants/status.ts'
-import { TEXTOS } from '../../constants/textos.ts'
-import { usePedidos } from '../../hooks/usePedidos.ts'
-import { descreverModelo, formatarMoeda } from '../../utils/formatacao.ts'
+} from '@mui/material';
+import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Carregando } from '@/components/Carregando.tsx';
+import { PainelAvaliacao } from '@/components/PainelAvaliacao.tsx';
+import { FiltroStatus, TODOS_OS_STATUS, type OpcaoFiltroStatus } from '@/components/FiltroStatus.tsx';
+import { SeloStatus } from '@/components/SeloStatus.tsx';
+import { LARGURAS } from '@/constants/estilo.ts';
+import { PARAMETROS_URL } from '@/constants/rotas.ts';
+import { STATUS_PEDIDO } from '@/constants/status.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import { usePedidos } from '@/hooks/usePedidos.ts';
+import { descreverModelo, formatarMoeda } from '@/utils/formatacao.ts';
 
 export function PaginaPedidosRecebidos() {
-  const [status, setStatus] = useState<OpcaoFiltroStatus>(TODOS_OS_STATUS)
-  const [parametros, setParametros] = useSearchParams()
-  const selecionadoId = Number(parametros.get(PARAMETROS_URL.pedido))
-  const { pedidos, carregando, erro, recarregar } = usePedidos(status || undefined)
-  const pedidoSelecionado = pedidos.find((pedido) => pedido.id === selecionadoId) ?? null
+  const [status, setStatus] = useState<OpcaoFiltroStatus>(TODOS_OS_STATUS);
+  const [parametros, setParametros] = useSearchParams();
+  const selecionadoId = Number(parametros.get(PARAMETROS_URL.pedido));
+  const { pedidos, carregando, erro, recarregar } = usePedidos(status || undefined);
+  const pedidoSelecionado = pedidos.find((pedido) => pedido.id === selecionadoId) ?? null;
 
   function selecionarPedido(id: number) {
-    setParametros({ [PARAMETROS_URL.pedido]: String(id) }, { replace: true })
+    setParametros({ [PARAMETROS_URL.pedido]: String(id) }, { replace: true });
   }
 
   return (
@@ -106,7 +106,7 @@ export function PaginaPedidosRecebidos() {
         </Paper>
       </Box>
     </Box>
-  )
+  );
 }
 
 const estilos = {
@@ -146,4 +146,4 @@ const estilos = {
     gap: 2,
     p: 3,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

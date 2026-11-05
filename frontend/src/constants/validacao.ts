@@ -11,4 +11,4 @@ export const REGRAS_VALIDACAO = {
   tamanhoMaximoObservacao: 500,
   valorMinimoCredito: 0.01,
   prazoMinimoCreditoMeses: 1,
-} as const
+} as const;

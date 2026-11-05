@@ -1,4 +1,4 @@
-import type { StatusPedido } from '../types/pedido.ts'
+import type { StatusPedido } from '@/types/pedido.ts';
 
 export const STATUS_PEDIDO = {
   emAnalise: 'EM_ANALISE',
@@ -6,7 +6,7 @@ export const STATUS_PEDIDO = {
   reprovado: 'REPROVADO',
   contratoExecutado: 'CONTRATO_EXECUTADO',
   cancelado: 'CANCELADO',
-} as const
+} as const;
 
 export const ROTULOS_STATUS: Record<StatusPedido, string> = {
   [STATUS_PEDIDO.emAnalise]: 'Em análise',
@@ -14,19 +14,19 @@ export const ROTULOS_STATUS: Record<StatusPedido, string> = {
   [STATUS_PEDIDO.reprovado]: 'Reprovado',
   [STATUS_PEDIDO.contratoExecutado]: 'Contrato executado',
   [STATUS_PEDIDO.cancelado]: 'Cancelado',
-}
+};
 
 export const OPCOES_PARECER = {
   positivo: 'positivo',
   negativo: 'negativo',
-} as const
+} as const;
 
 export const ESTADOS_ETAPA = {
   concluida: 'concluida',
   atual: 'atual',
   pendente: 'pendente',
   erro: 'erro',
-} as const
+} as const;
 
 export const CORES_STATUS: Record<StatusPedido, 'info' | 'success' | 'error' | 'primary' | 'default'> = {
   [STATUS_PEDIDO.emAnalise]: 'info',
@@ -34,4 +34,4 @@ export const CORES_STATUS: Record<StatusPedido, 'info' | 'success' | 'error' | '
   [STATUS_PEDIDO.reprovado]: 'error',
   [STATUS_PEDIDO.contratoExecutado]: 'primary',
   [STATUS_PEDIDO.cancelado]: 'default',
-}
+};

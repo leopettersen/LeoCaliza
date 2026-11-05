@@ -1,22 +1,28 @@
-import type { ItemDado } from '../components/ListaDados.tsx'
-import { ROTULOS_TIPO_PROPRIETARIO } from '../constants/rotulos.ts'
-import { TEXTOS } from '../constants/textos.ts'
-import type { Pedido } from '../types/pedido.ts'
-import { descreverAutomovel, formatarData, formatarDataHora, formatarMoeda, formatarPeriodo } from './formatacao.ts'
+import type { ItemDado } from '@/components/ListaDados.tsx';
+import { ROTULOS_TIPO_PROPRIETARIO } from '@/constants/rotulos.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import type { Pedido } from '@/types/pedido.ts';
+import {
+  descreverAutomovel,
+  formatarData,
+  formatarDataHora,
+  formatarMoeda,
+  formatarPeriodo,
+} from '@/utils/formatacao.ts';
 
 export function descreverCredito(pedido: Pedido) {
   if (pedido.contratoCredito) {
-    const { agenteNome, valor, prazoMeses } = pedido.contratoCredito
-    return TEXTOS.detalhePedido.creditoConcedido(agenteNome, formatarMoeda(valor), prazoMeses)
+    const { agenteNome, valor, prazoMeses } = pedido.contratoCredito;
+    return TEXTOS.detalhePedido.creditoConcedido(agenteNome, formatarMoeda(valor), prazoMeses);
   }
   if (pedido.bancoCreditoNome) {
-    return TEXTOS.detalhePedido.creditoSolicitado(pedido.bancoCreditoNome)
+    return TEXTOS.detalhePedido.creditoSolicitado(pedido.bancoCreditoNome);
   }
-  return TEXTOS.detalhePedido.semCredito
+  return TEXTOS.detalhePedido.semCredito;
 }
 
 export function montarDadosPedido(pedido: Pedido): ItemDado[] {
-  const { automovel, avaliacao, contratoAluguel } = pedido
+  const { automovel, avaliacao, contratoAluguel } = pedido;
   const itens: ItemDado[] = [
     { rotulo: TEXTOS.detalhePedido.rotuloAutomovel, valor: descreverAutomovel(automovel) },
     { rotulo: TEXTOS.detalhePedido.rotuloAno, valor: String(automovel.ano) },
@@ -31,7 +37,7 @@ export function montarDadosPedido(pedido: Pedido): ItemDado[] {
     },
     { rotulo: TEXTOS.detalhePedido.rotuloCredito, valor: descreverCredito(pedido) },
     { rotulo: TEXTOS.detalhePedido.rotuloDataPedido, valor: formatarData(pedido.dataCriacao) },
-  ]
+  ];
   if (avaliacao) {
     itens.push({
       rotulo: TEXTOS.detalhePedido.rotuloParecer,
@@ -41,19 +47,19 @@ export function montarDadosPedido(pedido: Pedido): ItemDado[] {
         formatarDataHora(avaliacao.data),
         avaliacao.observacao,
       ),
-    })
+    });
   }
   if (contratoAluguel) {
     itens.push({
       rotulo: TEXTOS.detalhePedido.rotuloContrato,
       valor: TEXTOS.detalhePedido.contratoExecutadoEm(formatarDataHora(contratoAluguel.dataExecucao)),
-    })
+    });
   }
   if (pedido.modificadoPor && pedido.dataModificacao) {
     itens.push({
       rotulo: TEXTOS.detalhePedido.rotuloUltimaModificacao,
       valor: TEXTOS.detalhePedido.descricaoModificacao(pedido.modificadoPor, formatarDataHora(pedido.dataModificacao)),
-    })
+    });
   }
-  return itens
+  return itens;
 }

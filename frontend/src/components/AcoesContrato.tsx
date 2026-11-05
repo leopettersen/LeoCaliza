@@ -1,60 +1,60 @@
-import { Alert, Box, Button, InputAdornment, TextField, Typography, type SxProps, type Theme } from '@mui/material'
-import { useState, type SubmitEvent } from 'react'
-import { TEXTOS } from '../constants/textos.ts'
-import { REGRAS_VALIDACAO } from '../constants/validacao.ts'
-import { useAutenticacao } from '../hooks/useAutenticacao.ts'
-import { extrairMensagemDeErro } from '../services/api.ts'
-import { concederCredito, executarContrato } from '../services/pedidoService.ts'
-import type { Pedido } from '../types/pedido.ts'
-import { formatarNumeroPedido } from '../utils/formatacao.ts'
-import { obterBloqueioExecucao, podeConcederCredito } from '../utils/regrasPedido.ts'
-import { DialogoConfirmacao } from './DialogoConfirmacao.tsx'
+import { Alert, Box, Button, InputAdornment, TextField, Typography, type SxProps, type Theme } from '@mui/material';
+import { useState, type SubmitEvent } from 'react';
+import { TEXTOS } from '@/constants/textos.ts';
+import { REGRAS_VALIDACAO } from '@/constants/validacao.ts';
+import { useAutenticacao } from '@/hooks/useAutenticacao.ts';
+import { extrairMensagemDeErro } from '@/services/api.ts';
+import { concederCredito, executarContrato } from '@/services/pedidoService.ts';
+import type { Pedido } from '@/types/pedido.ts';
+import { formatarNumeroPedido } from '@/utils/formatacao.ts';
+import { obterBloqueioExecucao, podeConcederCredito } from '@/utils/regrasPedido.ts';
+import { DialogoConfirmacao } from '@/components/DialogoConfirmacao.tsx';
 
 interface PropriedadesAcoesContrato {
-  pedido: Pedido
-  aoAtualizar: () => void
+  pedido: Pedido;
+  aoAtualizar: () => void;
 }
 
 export function AcoesContrato({ pedido, aoAtualizar }: PropriedadesAcoesContrato) {
-  const { sessao } = useAutenticacao()
-  const [valor, setValor] = useState('')
-  const [prazoMeses, setPrazoMeses] = useState('')
-  const [concedendo, setConcedendo] = useState(false)
-  const [confirmandoExecucao, setConfirmandoExecucao] = useState(false)
-  const [executando, setExecutando] = useState(false)
-  const [erro, setErro] = useState<string | null>(null)
-  const [erroExecucao, setErroExecucao] = useState<string | null>(null)
-  const [sucesso, setSucesso] = useState<string | null>(null)
-  const bloqueioExecucao = obterBloqueioExecucao(pedido)
+  const { sessao } = useAutenticacao();
+  const [valor, setValor] = useState('');
+  const [prazoMeses, setPrazoMeses] = useState('');
+  const [concedendo, setConcedendo] = useState(false);
+  const [confirmandoExecucao, setConfirmandoExecucao] = useState(false);
+  const [executando, setExecutando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const [erroExecucao, setErroExecucao] = useState<string | null>(null);
+  const [sucesso, setSucesso] = useState<string | null>(null);
+  const bloqueioExecucao = obterBloqueioExecucao(pedido);
 
   async function enviarCredito(evento: SubmitEvent<HTMLFormElement>) {
-    evento.preventDefault()
-    setErro(null)
-    setSucesso(null)
-    setConcedendo(true)
+    evento.preventDefault();
+    setErro(null);
+    setSucesso(null);
+    setConcedendo(true);
     try {
-      await concederCredito(pedido.id, { valor: Number(valor), prazoMeses: Number(prazoMeses) })
-      setSucesso(TEXTOS.acoesContrato.creditoConcedido)
-      aoAtualizar()
+      await concederCredito(pedido.id, { valor: Number(valor), prazoMeses: Number(prazoMeses) });
+      setSucesso(TEXTOS.acoesContrato.creditoConcedido);
+      aoAtualizar();
     } catch (falha) {
-      setErro(extrairMensagemDeErro(falha))
+      setErro(extrairMensagemDeErro(falha));
     } finally {
-      setConcedendo(false)
+      setConcedendo(false);
     }
   }
 
   async function confirmarExecucao() {
-    setErroExecucao(null)
-    setExecutando(true)
+    setErroExecucao(null);
+    setExecutando(true);
     try {
-      await executarContrato(pedido.id)
-      setConfirmandoExecucao(false)
-      setSucesso(TEXTOS.acoesContrato.contratoExecutado)
-      aoAtualizar()
+      await executarContrato(pedido.id);
+      setConfirmandoExecucao(false);
+      setSucesso(TEXTOS.acoesContrato.contratoExecutado);
+      aoAtualizar();
     } catch (falha) {
-      setErroExecucao(extrairMensagemDeErro(falha))
+      setErroExecucao(extrairMensagemDeErro(falha));
     } finally {
-      setExecutando(false)
+      setExecutando(false);
     }
   }
 
@@ -131,7 +131,7 @@ export function AcoesContrato({ pedido, aoAtualizar }: PropriedadesAcoesContrato
         aoConfirmar={confirmarExecucao}
       />
     </Box>
-  )
+  );
 }
 
 const estilos = {
@@ -150,4 +150,4 @@ const estilos = {
     gridTemplateColumns: '1fr 1fr',
     gap: 2,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

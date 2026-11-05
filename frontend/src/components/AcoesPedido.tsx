@@ -1,44 +1,44 @@
-import { Button } from '@mui/material'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { TEXTOS } from '../constants/textos.ts'
-import { obterCaminhoEditarPedido } from '../routes/caminhos.ts'
-import { extrairMensagemDeErro } from '../services/api.ts'
-import { cancelarPedido } from '../services/pedidoService.ts'
-import type { Pedido } from '../types/pedido.ts'
-import { formatarNumeroPedido } from '../utils/formatacao.ts'
-import { podeCancelar, podeModificar } from '../utils/regrasPedido.ts'
-import { DialogoConfirmacao } from './DialogoConfirmacao.tsx'
+import { Button } from '@mui/material';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { TEXTOS } from '@/constants/textos.ts';
+import { obterCaminhoEditarPedido } from '@/routes/caminhos.ts';
+import { extrairMensagemDeErro } from '@/services/api.ts';
+import { cancelarPedido } from '@/services/pedidoService.ts';
+import type { Pedido } from '@/types/pedido.ts';
+import { formatarNumeroPedido } from '@/utils/formatacao.ts';
+import { podeCancelar, podeModificar } from '@/utils/regrasPedido.ts';
+import { DialogoConfirmacao } from '@/components/DialogoConfirmacao.tsx';
 
 interface PropriedadesAcoesPedido {
-  pedido: Pedido
-  aoCancelar: () => void
-  destaque?: boolean
+  pedido: Pedido;
+  aoCancelar: () => void;
+  destaque?: boolean;
 }
 
 export function AcoesPedido({ pedido, aoCancelar, destaque = false }: PropriedadesAcoesPedido) {
-  const navegar = useNavigate()
-  const [confirmando, setConfirmando] = useState(false)
-  const [cancelando, setCancelando] = useState(false)
-  const [erro, setErro] = useState<string | null>(null)
-  const tamanho = destaque ? 'large' : 'small'
+  const navegar = useNavigate();
+  const [confirmando, setConfirmando] = useState(false);
+  const [cancelando, setCancelando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const tamanho = destaque ? 'large' : 'small';
 
   function abrirConfirmacao() {
-    setErro(null)
-    setConfirmando(true)
+    setErro(null);
+    setConfirmando(true);
   }
 
   async function confirmarCancelamento() {
-    setCancelando(true)
-    setErro(null)
+    setCancelando(true);
+    setErro(null);
     try {
-      await cancelarPedido(pedido.id)
-      setConfirmando(false)
-      aoCancelar()
+      await cancelarPedido(pedido.id);
+      setConfirmando(false);
+      aoCancelar();
     } catch (falha) {
-      setErro(extrairMensagemDeErro(falha))
+      setErro(extrairMensagemDeErro(falha));
     } finally {
-      setCancelando(false)
+      setCancelando(false);
     }
   }
 
@@ -52,7 +52,13 @@ export function AcoesPedido({ pedido, aoCancelar, destaque = false }: Propriedad
       >
         {TEXTOS.acoesPedido.botaoModificar}
       </Button>
-      <Button size={tamanho} variant="outlined" color="error" disabled={!podeCancelar(pedido)} onClick={abrirConfirmacao}>
+      <Button
+        size={tamanho}
+        variant="outlined"
+        color="error"
+        disabled={!podeCancelar(pedido)}
+        onClick={abrirConfirmacao}
+      >
         {destaque ? TEXTOS.acoesPedido.botaoCancelarPedido : TEXTOS.acoesPedido.botaoCancelar}
       </Button>
       <DialogoConfirmacao
@@ -67,5 +73,5 @@ export function AcoesPedido({ pedido, aoCancelar, destaque = false }: Propriedad
         aoConfirmar={confirmarCancelamento}
       />
     </>
-  )
+  );
 }

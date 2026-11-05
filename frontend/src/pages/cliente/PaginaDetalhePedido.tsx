@@ -1,24 +1,24 @@
-import { Alert, Box, Button, Paper, Typography, type SxProps, type Theme } from '@mui/material'
-import { useNavigate, useParams } from 'react-router-dom'
-import { AcoesPedido } from '../../components/AcoesPedido.tsx'
-import { AndamentoPedido } from '../../components/AndamentoPedido.tsx'
-import { Carregando } from '../../components/Carregando.tsx'
-import { ListaDados } from '../../components/ListaDados.tsx'
-import { SeloStatus } from '../../components/SeloStatus.tsx'
-import { ROTAS } from '../../constants/rotas.ts'
-import { TEXTOS } from '../../constants/textos.ts'
-import { usePedido } from '../../hooks/usePedido.ts'
-import { montarAndamento } from '../../utils/andamentoPedido.ts'
-import { montarDadosPedido } from '../../utils/descricaoPedido.ts'
-import { formatarNumeroPedido } from '../../utils/formatacao.ts'
+import { Alert, Box, Button, Paper, Typography, type SxProps, type Theme } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
+import { AcoesPedido } from '@/components/AcoesPedido.tsx';
+import { AndamentoPedido } from '@/components/AndamentoPedido.tsx';
+import { Carregando } from '@/components/Carregando.tsx';
+import { ListaDados } from '@/components/ListaDados.tsx';
+import { SeloStatus } from '@/components/SeloStatus.tsx';
+import { ROTAS } from '@/constants/rotas.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import { usePedido } from '@/hooks/usePedido.ts';
+import { montarAndamento } from '@/utils/andamentoPedido.ts';
+import { montarDadosPedido } from '@/utils/descricaoPedido.ts';
+import { formatarNumeroPedido } from '@/utils/formatacao.ts';
 
 export function PaginaDetalhePedido() {
-  const { id } = useParams()
-  const navegar = useNavigate()
-  const { pedido, carregando, erro, recarregar } = usePedido(Number(id))
+  const { id } = useParams();
+  const navegar = useNavigate();
+  const { pedido, carregando, erro, recarregar } = usePedido(Number(id));
 
   if (carregando) {
-    return <Carregando />
+    return <Carregando />;
   }
 
   if (erro || !pedido) {
@@ -31,7 +31,7 @@ export function PaginaDetalhePedido() {
           </Button>
         </Box>
       </Box>
-    )
+    );
   }
 
   return (
@@ -60,7 +60,7 @@ export function PaginaDetalhePedido() {
         </Paper>
       </Box>
     </Box>
-  )
+  );
 }
 
 const estilos = {
@@ -93,4 +93,4 @@ const estilos = {
     gap: 2,
     pt: 1,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

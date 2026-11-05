@@ -1,30 +1,30 @@
 export interface Rendimento {
-  id?: number
-  entidadeEmpregadora: string
-  valor: number
+  id?: number;
+  entidadeEmpregadora: string;
+  valor: number;
 }
 
 export interface Cliente {
-  id: number
-  login: string
-  nome: string
-  rg: string
-  cpf: string
-  endereco: string
-  profissao: string
-  rendimentos: Rendimento[]
+  id: number;
+  login: string;
+  nome: string;
+  rg: string;
+  cpf: string;
+  endereco: string;
+  profissao: string;
+  rendimentos: Rendimento[];
 }
 
 export interface ClienteResumo {
-  id: number
-  nome: string
+  id: number;
+  nome: string;
 }
 
 export interface DadosCliente {
-  nome: string
-  rg: string
-  cpf: string
-  endereco: string
-  profissao: string
-  rendimentos: Rendimento[]
+  nome: string;
+  rg: string;
+  cpf: string;
+  endereco: string;
+  profissao: string;
+  rendimentos: Rendimento[];
 }

@@ -12,19 +12,19 @@ import {
   Typography,
   type SxProps,
   type Theme,
-} from '@mui/material'
-import { useState, type ChangeEvent, type SubmitEvent } from 'react'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { LayoutAutenticacao } from '../../components/LayoutAutenticacao.tsx'
-import { PERFIS, TIPOS_AGENTE } from '../../constants/perfis.ts'
-import { PARAMETROS_URL, ROTAS } from '../../constants/rotas.ts'
-import { TEXTOS } from '../../constants/textos.ts'
-import { REGRAS_VALIDACAO } from '../../constants/validacao.ts'
-import { useAutenticacao } from '../../hooks/useAutenticacao.ts'
-import { obterRotaInicial } from '../../routes/rotaInicial.ts'
-import { extrairMensagemDeErro } from '../../services/api.ts'
-import { cadastrarUsuario } from '../../services/authService.ts'
-import type { DadosCadastro, Perfil, TipoAgente } from '../../types/auth.ts'
+} from '@mui/material';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { LayoutAutenticacao } from '@/components/LayoutAutenticacao.tsx';
+import { PERFIS, TIPOS_AGENTE } from '@/constants/perfis.ts';
+import { PARAMETROS_URL, ROTAS } from '@/constants/rotas.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import { REGRAS_VALIDACAO } from '@/constants/validacao.ts';
+import { useAutenticacao } from '@/hooks/useAutenticacao.ts';
+import { obterRotaInicial } from '@/routes/rotaInicial.ts';
+import { extrairMensagemDeErro } from '@/services/api.ts';
+import { cadastrarUsuario } from '@/services/authService.ts';
+import type { DadosCadastro, Perfil, TipoAgente } from '@/types/auth.ts';
 
 const FORMULARIO_INICIAL = {
   nome: '',
@@ -35,52 +35,52 @@ const FORMULARIO_INICIAL = {
   login: '',
   senha: '',
   confirmarSenha: '',
-}
+};
 
-type CampoFormulario = keyof typeof FORMULARIO_INICIAL
+type CampoFormulario = keyof typeof FORMULARIO_INICIAL;
 
 export function PaginaCadastro() {
-  const { entrar } = useAutenticacao()
-  const navegar = useNavigate()
-  const [parametros, setParametros] = useSearchParams()
-  const perfil: Perfil = parametros.get(PARAMETROS_URL.perfil) === PERFIS.agente ? PERFIS.agente : PERFIS.cliente
-  const ehCliente = perfil === PERFIS.cliente
-  const [formulario, setFormulario] = useState(FORMULARIO_INICIAL)
-  const [tipoAgente, setTipoAgente] = useState<TipoAgente>(TIPOS_AGENTE.empresa)
-  const [erro, setErro] = useState<string | null>(null)
-  const [enviando, setEnviando] = useState(false)
+  const { entrar } = useAutenticacao();
+  const navegar = useNavigate();
+  const [parametros, setParametros] = useSearchParams();
+  const perfil: Perfil = parametros.get(PARAMETROS_URL.perfil) === PERFIS.agente ? PERFIS.agente : PERFIS.cliente;
+  const ehCliente = perfil === PERFIS.cliente;
+  const [formulario, setFormulario] = useState(FORMULARIO_INICIAL);
+  const [tipoAgente, setTipoAgente] = useState<TipoAgente>(TIPOS_AGENTE.empresa);
+  const [erro, setErro] = useState<string | null>(null);
+  const [enviando, setEnviando] = useState(false);
 
   function alterarCampo(campo: CampoFormulario) {
     return (evento: ChangeEvent<HTMLInputElement>) =>
-      setFormulario((atual) => ({ ...atual, [campo]: evento.target.value }))
+      setFormulario((atual) => ({ ...atual, [campo]: evento.target.value }));
   }
 
   function alterarPerfil(novoPerfil: Perfil) {
-    setParametros({ [PARAMETROS_URL.perfil]: novoPerfil }, { replace: true })
+    setParametros({ [PARAMETROS_URL.perfil]: novoPerfil }, { replace: true });
   }
 
   function montarDadosCadastro(): DadosCadastro {
-    const { nome, cpf, rg, endereco, profissao, login, senha } = formulario
-    const dadosComuns = { login, senha, perfil, nome }
-    return ehCliente ? { ...dadosComuns, cpf, rg, endereco, profissao } : { ...dadosComuns, tipoAgente }
+    const { nome, cpf, rg, endereco, profissao, login, senha } = formulario;
+    const dadosComuns = { login, senha, perfil, nome };
+    return ehCliente ? { ...dadosComuns, cpf, rg, endereco, profissao } : { ...dadosComuns, tipoAgente };
   }
 
   async function enviarCadastro(evento: SubmitEvent<HTMLFormElement>) {
-    evento.preventDefault()
-    setErro(null)
+    evento.preventDefault();
+    setErro(null);
     if (formulario.senha !== formulario.confirmarSenha) {
-      setErro(TEXTOS.cadastro.senhasDiferentes)
-      return
+      setErro(TEXTOS.cadastro.senhasDiferentes);
+      return;
     }
-    setEnviando(true)
+    setEnviando(true);
     try {
-      await cadastrarUsuario(montarDadosCadastro())
-      const sessao = await entrar({ login: formulario.login, senha: formulario.senha })
-      navegar(obterRotaInicial(sessao.perfil), { replace: true })
+      await cadastrarUsuario(montarDadosCadastro());
+      const sessao = await entrar({ login: formulario.login, senha: formulario.senha });
+      navegar(obterRotaInicial(sessao.perfil), { replace: true });
     } catch (falha) {
-      setErro(extrairMensagemDeErro(falha))
+      setErro(extrairMensagemDeErro(falha));
     } finally {
-      setEnviando(false)
+      setEnviando(false);
     }
   }
 
@@ -124,12 +124,7 @@ export function PaginaCadastro() {
                 onChange={alterarCampo('cpf')}
                 required
               />
-              <TextField
-                label={TEXTOS.camposCliente.rg}
-                value={formulario.rg}
-                onChange={alterarCampo('rg')}
-                required
-              />
+              <TextField label={TEXTOS.camposCliente.rg} value={formulario.rg} onChange={alterarCampo('rg')} required />
             </Box>
             <TextField
               label={TEXTOS.camposCliente.endereco}
@@ -149,11 +144,7 @@ export function PaginaCadastro() {
         ) : (
           <FormControl>
             <FormLabel>{TEXTOS.cadastro.campoTipoAgente}</FormLabel>
-            <RadioGroup
-              row
-              value={tipoAgente}
-              onChange={(evento) => setTipoAgente(evento.target.value as TipoAgente)}
-            >
+            <RadioGroup row value={tipoAgente} onChange={(evento) => setTipoAgente(evento.target.value as TipoAgente)}>
               <FormControlLabel value={TIPOS_AGENTE.empresa} control={<Radio />} label={TEXTOS.tiposAgente.empresa} />
               <FormControlLabel value={TIPOS_AGENTE.banco} control={<Radio />} label={TEXTOS.tiposAgente.banco} />
             </RadioGroup>
@@ -205,7 +196,7 @@ export function PaginaCadastro() {
         </Button>
       </Box>
     </LayoutAutenticacao>
-  )
+  );
 }
 
 const estilos = {
@@ -228,4 +219,4 @@ const estilos = {
     justifyContent: 'center',
     gap: 1,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

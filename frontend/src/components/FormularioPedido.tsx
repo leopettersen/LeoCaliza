@@ -14,38 +14,47 @@ import {
   Typography,
   type SxProps,
   type Theme,
-} from '@mui/material'
-import { useState, type ChangeEvent, type SubmitEvent } from 'react'
-import { LARGURAS } from '../constants/estilo.ts'
-import { FORMATOS } from '../constants/formatos.ts'
-import { TIPOS_PROPRIETARIO } from '../constants/perfis.ts'
-import { ROTULOS_TIPO_PROPRIETARIO } from '../constants/rotulos.ts'
-import { TEXTOS } from '../constants/textos.ts'
-import { REGRAS_VALIDACAO } from '../constants/validacao.ts'
-import { useAgentes } from '../hooks/useAgentes.ts'
-import { useAutenticacao } from '../hooks/useAutenticacao.ts'
-import { useClientesProprietarios } from '../hooks/useClientesProprietarios.ts'
-import { extrairMensagemDeErro } from '../services/api.ts'
-import type { Agente } from '../types/agente.ts'
-import type { DadosPedido, TipoProprietario } from '../types/pedido.ts'
-import { obterDataDeHojeIso } from '../utils/datas.ts'
-import { formatarPeriodo } from '../utils/formatacao.ts'
-import { SEM_SELECAO, paraDadosPedido, type ValoresFormularioPedido } from '../utils/formularioPedido.ts'
-import { SecaoFormulario } from './SecaoFormulario.tsx'
+} from '@mui/material';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
+import { LARGURAS } from '@/constants/estilo.ts';
+import { FORMATOS } from '@/constants/formatos.ts';
+import { TIPOS_PROPRIETARIO } from '@/constants/perfis.ts';
+import { ROTULOS_TIPO_PROPRIETARIO } from '@/constants/rotulos.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import { REGRAS_VALIDACAO } from '@/constants/validacao.ts';
+import { useAgentes } from '@/hooks/useAgentes.ts';
+import { useAutenticacao } from '@/hooks/useAutenticacao.ts';
+import { useClientesProprietarios } from '@/hooks/useClientesProprietarios.ts';
+import { extrairMensagemDeErro } from '@/services/api.ts';
+import type { Agente } from '@/types/agente.ts';
+import type { DadosPedido, TipoProprietario } from '@/types/pedido.ts';
+import { obterDataDeHojeIso } from '@/utils/datas.ts';
+import { formatarPeriodo } from '@/utils/formatacao.ts';
+import { SEM_SELECAO, paraDadosPedido, type ValoresFormularioPedido } from '@/utils/formularioPedido.ts';
+import { SecaoFormulario } from '@/components/SecaoFormulario.tsx';
 
-type CampoTexto = 'marca' | 'modelo' | 'ano' | 'placa' | 'matricula' | 'dataRetirada' | 'dataDevolucao' | 'proprietarioId' | 'bancoCreditoId'
+type CampoTexto =
+  | 'marca'
+  | 'modelo'
+  | 'ano'
+  | 'placa'
+  | 'matricula'
+  | 'dataRetirada'
+  | 'dataDevolucao'
+  | 'proprietarioId'
+  | 'bancoCreditoId';
 
 interface PropriedadesFormularioPedido {
-  valoresIniciais: ValoresFormularioPedido
-  rotuloEnviar: string
-  aoEnviar: (dados: DadosPedido) => Promise<void>
-  aoCancelar: () => void
-  rotuloClienteProprietario?: string
-  avisoResumo?: string
+  valoresIniciais: ValoresFormularioPedido;
+  rotuloEnviar: string;
+  aoEnviar: (dados: DadosPedido) => Promise<void>;
+  aoCancelar: () => void;
+  rotuloClienteProprietario?: string;
+  avisoResumo?: string;
 }
 
 function buscarNomeAgente(agentes: Pick<Agente, 'id' | 'nome'>[], id: string) {
-  return agentes.find((agente) => String(agente.id) === id)?.nome ?? TEXTOS.formularioPedido.naoInformado
+  return agentes.find((agente) => String(agente.id) === id)?.nome ?? TEXTOS.formularioPedido.naoInformado;
 }
 
 export function FormularioPedido({
@@ -56,62 +65,62 @@ export function FormularioPedido({
   rotuloClienteProprietario = TEXTOS.formularioPedido.voceMesmo,
   avisoResumo = TEXTOS.formularioPedido.avisoResumo,
 }: PropriedadesFormularioPedido) {
-  const { empresas, bancos, erro: erroAgentes } = useAgentes()
-  const { clientes } = useClientesProprietarios()
-  const [valores, setValores] = useState(valoresIniciais)
-  const [erro, setErro] = useState<string | null>(null)
-  const [enviando, setEnviando] = useState(false)
-  const hoje = obterDataDeHojeIso()
-  const proprietarioEhAgente = valores.tipoProprietario !== TIPOS_PROPRIETARIO.cliente
-  const agentesProprietarios = valores.tipoProprietario === TIPOS_PROPRIETARIO.banco ? bancos : empresas
-  const { sessao } = useAutenticacao()
+  const { empresas, bancos, erro: erroAgentes } = useAgentes();
+  const { clientes } = useClientesProprietarios();
+  const [valores, setValores] = useState(valoresIniciais);
+  const [erro, setErro] = useState<string | null>(null);
+  const [enviando, setEnviando] = useState(false);
+  const hoje = obterDataDeHojeIso();
+  const proprietarioEhAgente = valores.tipoProprietario !== TIPOS_PROPRIETARIO.cliente;
+  const agentesProprietarios = valores.tipoProprietario === TIPOS_PROPRIETARIO.banco ? bancos : empresas;
+  const { sessao } = useAutenticacao();
 
   function alterarCampo(campo: CampoTexto) {
     return (evento: ChangeEvent<HTMLInputElement>) =>
-      setValores((atuais) => ({ ...atuais, [campo]: evento.target.value }))
+      setValores((atuais) => ({ ...atuais, [campo]: evento.target.value }));
   }
 
   function alterarTipoProprietario(tipo: TipoProprietario) {
-    setValores((atuais) => ({ ...atuais, tipoProprietario: tipo, proprietarioId: SEM_SELECAO }))
+    setValores((atuais) => ({ ...atuais, tipoProprietario: tipo, proprietarioId: SEM_SELECAO }));
   }
 
   function alterarAssociarCredito(associar: boolean) {
-    setValores((atuais) => ({ ...atuais, associarCredito: associar, bancoCreditoId: SEM_SELECAO }))
+    setValores((atuais) => ({ ...atuais, associarCredito: associar, bancoCreditoId: SEM_SELECAO }));
   }
 
   function descreverProprietario() {
     if (!proprietarioEhAgente) {
       if (valores.proprietarioId === SEM_SELECAO) {
-        return rotuloClienteProprietario
+        return rotuloClienteProprietario;
       }
 
       if (sessao && valores.proprietarioId === String(sessao.id)) {
-        return 'Você'
+        return 'Você';
       }
 
-      return buscarNomeAgente(clientes, valores.proprietarioId)
+      return buscarNomeAgente(clientes, valores.proprietarioId);
     }
 
     return TEXTOS.formularioPedido.descricaoProprietario(
       ROTULOS_TIPO_PROPRIETARIO[valores.tipoProprietario],
       buscarNomeAgente(agentesProprietarios, valores.proprietarioId),
-    )
+    );
   }
 
   async function enviar(evento: SubmitEvent<HTMLFormElement>) {
-    evento.preventDefault()
-    setErro(null)
+    evento.preventDefault();
+    setErro(null);
     if (valores.dataDevolucao <= valores.dataRetirada) {
-      setErro(TEXTOS.formularioPedido.devolucaoAntesDaRetirada)
-      return
+      setErro(TEXTOS.formularioPedido.devolucaoAntesDaRetirada);
+      return;
     }
-    setEnviando(true)
+    setEnviando(true);
     try {
-      await aoEnviar(paraDadosPedido(valores))
+      await aoEnviar(paraDadosPedido(valores));
     } catch (falha) {
-      setErro(extrairMensagemDeErro(falha))
+      setErro(extrairMensagemDeErro(falha));
     } finally {
-      setEnviando(false)
+      setEnviando(false);
     }
   }
 
@@ -137,7 +146,7 @@ export function FormularioPedido({
         ? buscarNomeAgente(bancos, valores.bancoCreditoId)
         : TEXTOS.formularioPedido.semCredito,
     },
-  ]
+  ];
 
   return (
     <Box component="form" onSubmit={enviar} sx={estilos.layout}>
@@ -231,15 +240,9 @@ export function FormularioPedido({
               helperText={TEXTOS.formularioPedido.ajudaClienteProprietario}
               slotProps={{ select: { displayEmpty: true }, inputLabel: { shrink: true } }}
             >
-              <MenuItem value={SEM_SELECAO}>
-                Selecione um cliente
-              </MenuItem>
+              <MenuItem value={SEM_SELECAO}>Selecione um cliente</MenuItem>
 
-              {sessao && (
-                <MenuItem value={String(sessao.id)}>
-                  Você
-                </MenuItem>
-              )}
+              {sessao && <MenuItem value={String(sessao.id)}>Você</MenuItem>}
 
               {clientes
                 .filter((cliente) => !sessao || String(cliente.id) !== String(sessao.id))
@@ -326,7 +329,7 @@ export function FormularioPedido({
         </Button>
       </Paper>
     </Box>
-  )
+  );
 }
 
 const estilos = {
@@ -367,4 +370,4 @@ const estilos = {
     borderRadius: 1,
     bgcolor: 'background.default',
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

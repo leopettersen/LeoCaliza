@@ -12,39 +12,39 @@ import {
   Typography,
   type SxProps,
   type Theme,
-} from '@mui/material'
-import { useState, type SubmitEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { PERFIS } from '../constants/perfis.ts'
-import { OPCOES_PARECER } from '../constants/status.ts'
-import { TEXTOS } from '../constants/textos.ts'
-import { REGRAS_VALIDACAO } from '../constants/validacao.ts'
-import { obterCaminhoEditarPedido } from '../routes/caminhos.ts'
-import { extrairMensagemDeErro } from '../services/api.ts'
-import { avaliarPedido } from '../services/pedidoService.ts'
-import type { Pedido } from '../types/pedido.ts'
-import { montarDadosPedido } from '../utils/descricaoPedido.ts'
-import { formatarMoeda } from '../utils/formatacao.ts'
-import { podeAvaliar, podeModificar } from '../utils/regrasPedido.ts'
-import { AcoesContrato } from './AcoesContrato.tsx'
-import { ListaDados, type ItemDado } from './ListaDados.tsx'
+} from '@mui/material';
+import { useState, type SubmitEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { PERFIS } from '@/constants/perfis.ts';
+import { OPCOES_PARECER } from '@/constants/status.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import { REGRAS_VALIDACAO } from '@/constants/validacao.ts';
+import { obterCaminhoEditarPedido } from '@/routes/caminhos.ts';
+import { extrairMensagemDeErro } from '@/services/api.ts';
+import { avaliarPedido } from '@/services/pedidoService.ts';
+import type { Pedido } from '@/types/pedido.ts';
+import { montarDadosPedido } from '@/utils/descricaoPedido.ts';
+import { formatarMoeda } from '@/utils/formatacao.ts';
+import { podeAvaliar, podeModificar } from '@/utils/regrasPedido.ts';
+import { AcoesContrato } from '@/components/AcoesContrato.tsx';
+import { ListaDados, type ItemDado } from '@/components/ListaDados.tsx';
 
-type OpcaoParecer = (typeof OPCOES_PARECER)[keyof typeof OPCOES_PARECER]
+type OpcaoParecer = (typeof OPCOES_PARECER)[keyof typeof OPCOES_PARECER];
 
 interface PropriedadesPainelAvaliacao {
-  pedido: Pedido
-  aoAtualizar: () => void
+  pedido: Pedido;
+  aoAtualizar: () => void;
 }
 
 function montarDadosCliente(pedido: Pedido): ItemDado[] {
-  const { cliente } = pedido
+  const { cliente } = pedido;
   return [
     { rotulo: TEXTOS.camposCliente.nome, valor: cliente.nome },
     { rotulo: TEXTOS.camposCliente.cpf, valor: cliente.cpf },
     { rotulo: TEXTOS.camposCliente.rg, valor: cliente.rg },
     { rotulo: TEXTOS.camposCliente.profissao, valor: cliente.profissao },
     { rotulo: TEXTOS.camposCliente.endereco, valor: cliente.endereco },
-  ]
+  ];
 }
 
 function montarRendimentos(pedido: Pedido): ItemDado[] {
@@ -54,33 +54,33 @@ function montarRendimentos(pedido: Pedido): ItemDado[] {
       valor: formatarMoeda(rendimento.valor),
     })),
     { rotulo: TEXTOS.painelAvaliacao.rotuloRendaTotal, valor: formatarMoeda(pedido.rendaTotal) },
-  ]
+  ];
 }
 
 export function PainelAvaliacao({ pedido, aoAtualizar }: PropriedadesPainelAvaliacao) {
-  const navegar = useNavigate()
-  const [parecer, setParecer] = useState<OpcaoParecer>(OPCOES_PARECER.positivo)
-  const [observacao, setObservacao] = useState('')
-  const [registrando, setRegistrando] = useState(false)
-  const [erro, setErro] = useState<string | null>(null)
-  const [sucesso, setSucesso] = useState<string | null>(null)
+  const navegar = useNavigate();
+  const [parecer, setParecer] = useState<OpcaoParecer>(OPCOES_PARECER.positivo);
+  const [observacao, setObservacao] = useState('');
+  const [registrando, setRegistrando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const [sucesso, setSucesso] = useState<string | null>(null);
 
   async function registrarParecer(evento: SubmitEvent<HTMLFormElement>) {
-    evento.preventDefault()
-    setErro(null)
-    setSucesso(null)
-    setRegistrando(true)
+    evento.preventDefault();
+    setErro(null);
+    setSucesso(null);
+    setRegistrando(true);
     try {
       await avaliarPedido(pedido.id, {
         resultado: parecer === OPCOES_PARECER.positivo,
         observacao: observacao.trim(),
-      })
-      setSucesso(TEXTOS.painelAvaliacao.parecerRegistrado)
-      aoAtualizar()
+      });
+      setSucesso(TEXTOS.painelAvaliacao.parecerRegistrado);
+      aoAtualizar();
     } catch (falha) {
-      setErro(extrairMensagemDeErro(falha))
+      setErro(extrairMensagemDeErro(falha));
     } finally {
-      setRegistrando(false)
+      setRegistrando(false);
     }
   }
 
@@ -150,7 +150,7 @@ export function PainelAvaliacao({ pedido, aoAtualizar }: PropriedadesPainelAvali
         {TEXTOS.painelAvaliacao.botaoModificar}
       </Button>
     </Box>
-  )
+  );
 }
 
 const estilos = {
@@ -164,4 +164,4 @@ const estilos = {
     flexDirection: 'column',
     gap: 2,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

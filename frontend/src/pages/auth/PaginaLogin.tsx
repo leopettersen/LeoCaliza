@@ -10,38 +10,38 @@ import {
   Typography,
   type SxProps,
   type Theme,
-} from '@mui/material'
-import { useState, type SubmitEvent } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { LayoutAutenticacao } from '../../components/LayoutAutenticacao.tsx'
-import { PERFIS } from '../../constants/perfis.ts'
-import { PARAMETROS_URL, ROTAS } from '../../constants/rotas.ts'
-import { TEXTOS } from '../../constants/textos.ts'
-import { useAutenticacao } from '../../hooks/useAutenticacao.ts'
-import { obterRotaInicial } from '../../routes/rotaInicial.ts'
-import { extrairMensagemDeErro } from '../../services/api.ts'
-import type { Perfil } from '../../types/auth.ts'
+} from '@mui/material';
+import { useState, type SubmitEvent } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { LayoutAutenticacao } from '@/components/LayoutAutenticacao.tsx';
+import { PERFIS } from '@/constants/perfis.ts';
+import { PARAMETROS_URL, ROTAS } from '@/constants/rotas.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import { useAutenticacao } from '@/hooks/useAutenticacao.ts';
+import { obterRotaInicial } from '@/routes/rotaInicial.ts';
+import { extrairMensagemDeErro } from '@/services/api.ts';
+import type { Perfil } from '@/types/auth.ts';
 
 export function PaginaLogin() {
-  const { entrar, avisoSaida } = useAutenticacao()
-  const navegar = useNavigate()
-  const [login, setLogin] = useState('')
-  const [senha, setSenha] = useState('')
-  const [erro, setErro] = useState<string | null>(null)
-  const [enviando, setEnviando] = useState(false)
-  const [perfilCadastro, setPerfilCadastro] = useState<Perfil>(PERFIS.cliente)
+  const { entrar, avisoSaida } = useAutenticacao();
+  const navegar = useNavigate();
+  const [login, setLogin] = useState('');
+  const [senha, setSenha] = useState('');
+  const [erro, setErro] = useState<string | null>(null);
+  const [enviando, setEnviando] = useState(false);
+  const [perfilCadastro, setPerfilCadastro] = useState<Perfil>(PERFIS.cliente);
 
   async function enviarLogin(evento: SubmitEvent<HTMLFormElement>) {
-    evento.preventDefault()
-    setErro(null)
-    setEnviando(true)
+    evento.preventDefault();
+    setErro(null);
+    setEnviando(true);
     try {
-      const sessao = await entrar({ login, senha })
-      navegar(obterRotaInicial(sessao.perfil), { replace: true })
+      const sessao = await entrar({ login, senha });
+      navegar(obterRotaInicial(sessao.perfil), { replace: true });
     } catch (falha) {
-      setErro(extrairMensagemDeErro(falha))
+      setErro(extrairMensagemDeErro(falha));
     } finally {
-      setEnviando(false)
+      setEnviando(false);
     }
   }
 
@@ -49,7 +49,7 @@ export function PaginaLogin() {
     navegar({
       pathname: ROTAS.cadastro,
       search: new URLSearchParams({ [PARAMETROS_URL.perfil]: perfilCadastro }).toString(),
-    })
+    });
   }
 
   return (
@@ -92,11 +92,7 @@ export function PaginaLogin() {
         <Typography variant="h6" component="h2">
           {TEXTOS.login.primeiroAcesso}
         </Typography>
-        <RadioGroup
-          row
-          value={perfilCadastro}
-          onChange={(evento) => setPerfilCadastro(evento.target.value as Perfil)}
-        >
+        <RadioGroup row value={perfilCadastro} onChange={(evento) => setPerfilCadastro(evento.target.value as Perfil)}>
           <FormControlLabel value={PERFIS.cliente} control={<Radio />} label={TEXTOS.perfis.cliente} />
           <FormControlLabel value={PERFIS.agente} control={<Radio />} label={TEXTOS.perfis.agente} />
         </RadioGroup>
@@ -105,7 +101,7 @@ export function PaginaLogin() {
         </Button>
       </Box>
     </LayoutAutenticacao>
-  )
+  );
 }
 
 const estilos = {
@@ -122,4 +118,4 @@ const estilos = {
     flexDirection: 'column',
     gap: 1,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

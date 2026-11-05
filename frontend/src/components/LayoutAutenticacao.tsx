@@ -1,8 +1,8 @@
-import { Box, Paper, Typography, type SxProps, type Theme } from '@mui/material'
-import type { ReactNode } from 'react'
-import { LARGURAS } from '../constants/estilo.ts'
-import { IMAGENS } from '../constants/imagens.ts'
-import { TEXTOS } from '../constants/textos.ts'
+import { Box, Paper, Typography, type SxProps, type Theme } from '@mui/material';
+import type { ReactNode } from 'react';
+import { LARGURAS } from '@/constants/estilo.ts';
+import { IMAGENS } from '@/constants/imagens.ts';
+import { TEXTOS } from '@/constants/textos.ts';
 
 export function LayoutAutenticacao({ children }: { children: ReactNode }) {
   return (
@@ -11,7 +11,9 @@ export function LayoutAutenticacao({ children }: { children: ReactNode }) {
         <Box sx={estilos.moldura}>
           <Box component="img" sx={estilos.logo} src={IMAGENS.logo} alt={TEXTOS.app.descricaoLogo} />
         </Box>
-        <Typography variant="h6" component="p" sx={estilos.slogan}>{TEXTOS.app.slogan}</Typography>
+        <Typography variant="h6" component="p" sx={estilos.slogan}>
+          {TEXTOS.app.slogan}
+        </Typography>
       </Box>
       <Box component="main" sx={estilos.areaFormulario}>
         <Paper variant="outlined" sx={estilos.cartao}>
@@ -19,7 +21,7 @@ export function LayoutAutenticacao({ children }: { children: ReactNode }) {
         </Paper>
       </Box>
     </Box>
-  )
+  );
 }
 
 const estilos = {
@@ -62,4 +64,4 @@ const estilos = {
     maxWidth: LARGURAS.formulario,
     p: 4,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

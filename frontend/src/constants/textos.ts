@@ -265,4 +265,4 @@ export const TEXTOS = {
     semConexao: 'Não foi possível conectar ao servidor.',
     provedorAutenticacaoAusente: 'useAutenticacao deve ser usado dentro de ProvedorAutenticacao',
   },
-} as const
+} as const;

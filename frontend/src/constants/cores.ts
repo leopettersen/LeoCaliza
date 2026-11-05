@@ -14,4 +14,4 @@ export const CORES = {
   erroClaro: '#FBEAEA',
   alerta: '#B9770E',
   alertaClaro: '#FDF2E0',
-} as const
+} as const;

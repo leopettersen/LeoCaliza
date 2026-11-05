@@ -1,20 +1,20 @@
-import { TIPOS_PROPRIETARIO } from '../constants/perfis.ts'
-import type { DadosPedido, Pedido, TipoProprietario } from '../types/pedido.ts'
+import { TIPOS_PROPRIETARIO } from '@/constants/perfis.ts';
+import type { DadosPedido, Pedido, TipoProprietario } from '@/types/pedido.ts';
 
-export const SEM_SELECAO = ''
+export const SEM_SELECAO = '';
 
 export interface ValoresFormularioPedido {
-  marca: string
-  modelo: string
-  ano: string
-  placa: string
-  matricula: string
-  dataRetirada: string
-  dataDevolucao: string
-  tipoProprietario: TipoProprietario
-  proprietarioId: string
-  associarCredito: boolean
-  bancoCreditoId: string
+  marca: string;
+  modelo: string;
+  ano: string;
+  placa: string;
+  matricula: string;
+  dataRetirada: string;
+  dataDevolucao: string;
+  tipoProprietario: TipoProprietario;
+  proprietarioId: string;
+  associarCredito: boolean;
+  bancoCreditoId: string;
 }
 
 export const VALORES_INICIAIS_PEDIDO: ValoresFormularioPedido = {
@@ -29,11 +29,11 @@ export const VALORES_INICIAIS_PEDIDO: ValoresFormularioPedido = {
   proprietarioId: SEM_SELECAO,
   associarCredito: false,
   bancoCreditoId: SEM_SELECAO,
-}
+};
 
 export function paraValoresFormulario(pedido: Pedido): ValoresFormularioPedido {
-  const { automovel } = pedido
-  const proprietarioEhCliente = automovel.tipoProprietario === TIPOS_PROPRIETARIO.cliente
+  const { automovel } = pedido;
+  const proprietarioEhCliente = automovel.tipoProprietario === TIPOS_PROPRIETARIO.cliente;
   return {
     marca: automovel.marca,
     modelo: automovel.modelo,
@@ -49,7 +49,7 @@ export function paraValoresFormulario(pedido: Pedido): ValoresFormularioPedido {
         : String(automovel.proprietarioId),
     associarCredito: pedido.bancoCreditoId !== null,
     bancoCreditoId: pedido.bancoCreditoId === null ? SEM_SELECAO : String(pedido.bancoCreditoId),
-  }
+  };
 }
 
 export function paraDadosPedido(valores: ValoresFormularioPedido): DadosPedido {
@@ -66,5 +66,5 @@ export function paraDadosPedido(valores: ValoresFormularioPedido): DadosPedido {
     bancoCreditoId: valores.associarCredito ? Number(valores.bancoCreditoId) : null,
     dataRetirada: valores.dataRetirada,
     dataDevolucao: valores.dataDevolucao,
-  }
+  };
 }

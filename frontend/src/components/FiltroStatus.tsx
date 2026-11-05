@@ -1,15 +1,15 @@
-import { MenuItem, TextField } from '@mui/material'
-import { ROTULOS_STATUS, STATUS_PEDIDO } from '../constants/status.ts'
-import { TEXTOS } from '../constants/textos.ts'
-import type { StatusPedido } from '../types/pedido.ts'
+import { MenuItem, TextField } from '@mui/material';
+import { ROTULOS_STATUS, STATUS_PEDIDO } from '@/constants/status.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import type { StatusPedido } from '@/types/pedido.ts';
 
-export const TODOS_OS_STATUS = ''
+export const TODOS_OS_STATUS = '';
 
-export type OpcaoFiltroStatus = StatusPedido | typeof TODOS_OS_STATUS
+export type OpcaoFiltroStatus = StatusPedido | typeof TODOS_OS_STATUS;
 
 interface PropriedadesFiltroStatus {
-  valor: OpcaoFiltroStatus
-  aoAlterar: (valor: OpcaoFiltroStatus) => void
+  valor: OpcaoFiltroStatus;
+  aoAlterar: (valor: OpcaoFiltroStatus) => void;
 }
 
 export function FiltroStatus({ valor, aoAlterar }: PropriedadesFiltroStatus) {
@@ -28,5 +28,5 @@ export function FiltroStatus({ valor, aoAlterar }: PropriedadesFiltroStatus) {
         </MenuItem>
       ))}
     </TextField>
-  )
+  );
 }

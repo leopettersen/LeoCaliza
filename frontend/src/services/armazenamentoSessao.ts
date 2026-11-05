@@ -1,28 +1,28 @@
-import { CHAVES_ARMAZENAMENTO } from '../constants/armazenamento.ts'
-import type { Sessao } from '../types/auth.ts'
+import { CHAVES_ARMAZENAMENTO } from '@/constants/armazenamento.ts';
+import type { Sessao } from '@/types/auth.ts';
 
 export function lerSessaoSalva(): Sessao | null {
   try {
-    const salva = localStorage.getItem(CHAVES_ARMAZENAMENTO.sessao)
-    const sessao = salva ? (JSON.parse(salva) as Partial<Sessao>) : null
-    return sessao && typeof sessao.id === 'number' ? (sessao as Sessao) : null
+    const salva = localStorage.getItem(CHAVES_ARMAZENAMENTO.sessao);
+    const sessao = salva ? (JSON.parse(salva) as Partial<Sessao>) : null;
+    return sessao && typeof sessao.id === 'number' ? (sessao as Sessao) : null;
   } catch {
-    return null
+    return null;
   }
 }
 
 export function salvarSessao(sessao: Sessao) {
   try {
-    localStorage.setItem(CHAVES_ARMAZENAMENTO.sessao, JSON.stringify(sessao))
+    localStorage.setItem(CHAVES_ARMAZENAMENTO.sessao, JSON.stringify(sessao));
   } catch {
-    return
+    return;
   }
 }
 
 export function apagarSessao() {
   try {
-    localStorage.removeItem(CHAVES_ARMAZENAMENTO.sessao)
+    localStorage.removeItem(CHAVES_ARMAZENAMENTO.sessao);
   } catch {
-    return
+    return;
   }
 }

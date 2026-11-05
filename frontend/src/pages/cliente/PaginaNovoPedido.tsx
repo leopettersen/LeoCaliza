@@ -1,19 +1,19 @@
-import { Box, Typography, type SxProps, type Theme } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
-import { FormularioPedido } from '../../components/FormularioPedido.tsx'
-import { ROTAS } from '../../constants/rotas.ts'
-import { TEXTOS } from '../../constants/textos.ts'
-import { obterCaminhoDetalhePedido } from '../../routes/caminhos.ts'
-import { criarPedido } from '../../services/pedidoService.ts'
-import type { DadosPedido } from '../../types/pedido.ts'
-import { VALORES_INICIAIS_PEDIDO } from '../../utils/formularioPedido.ts'
+import { Box, Typography, type SxProps, type Theme } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { FormularioPedido } from '@/components/FormularioPedido.tsx';
+import { ROTAS } from '@/constants/rotas.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import { obterCaminhoDetalhePedido } from '@/routes/caminhos.ts';
+import { criarPedido } from '@/services/pedidoService.ts';
+import type { DadosPedido } from '@/types/pedido.ts';
+import { VALORES_INICIAIS_PEDIDO } from '@/utils/formularioPedido.ts';
 
 export function PaginaNovoPedido() {
-  const navegar = useNavigate()
+  const navegar = useNavigate();
 
   async function enviarPedido(dados: DadosPedido) {
-    const pedido = await criarPedido(dados)
-    navegar(obterCaminhoDetalhePedido(pedido.id))
+    const pedido = await criarPedido(dados);
+    navegar(obterCaminhoDetalhePedido(pedido.id));
   }
 
   return (
@@ -28,7 +28,7 @@ export function PaginaNovoPedido() {
         aoCancelar={() => navegar(ROTAS.cliente.pedidos)}
       />
     </Box>
-  )
+  );
 }
 
 const estilos = {
@@ -37,4 +37,4 @@ const estilos = {
     flexDirection: 'column',
     gap: 3,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

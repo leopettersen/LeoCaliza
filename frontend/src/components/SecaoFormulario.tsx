@@ -1,10 +1,10 @@
-import { Box, Paper, Typography, type SxProps, type Theme } from '@mui/material'
-import type { ReactNode } from 'react'
+import { Box, Paper, Typography, type SxProps, type Theme } from '@mui/material';
+import type { ReactNode } from 'react';
 
 interface PropriedadesSecaoFormulario {
-  titulo: string
-  acao?: ReactNode
-  children: ReactNode
+  titulo: string;
+  acao?: ReactNode;
+  children: ReactNode;
 }
 
 export function SecaoFormulario({ titulo, acao, children }: PropriedadesSecaoFormulario) {
@@ -18,7 +18,7 @@ export function SecaoFormulario({ titulo, acao, children }: PropriedadesSecaoFor
       </Box>
       <Box sx={estilos.conteudo}>{children}</Box>
     </Paper>
-  )
+  );
 }
 
 const estilos = {
@@ -37,4 +37,4 @@ const estilos = {
     flexDirection: 'column',
     gap: 2,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

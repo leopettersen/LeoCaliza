@@ -1,37 +1,28 @@
-import {
-  Alert,
-  Box,
-  Button,
-  InputAdornment,
-  TextField,
-  Typography,
-  type SxProps,
-  type Theme,
-} from '@mui/material'
-import { useState, type ChangeEvent, type SubmitEvent } from 'react'
-import { Carregando } from '../../components/Carregando.tsx'
-import { DialogoConfirmacao } from '../../components/DialogoConfirmacao.tsx'
-import { SecaoFormulario } from '../../components/SecaoFormulario.tsx'
-import { TEXTOS } from '../../constants/textos.ts'
-import { REGRAS_VALIDACAO } from '../../constants/validacao.ts'
-import { useAutenticacao } from '../../hooks/useAutenticacao.ts'
-import { useMeuCadastro } from '../../hooks/useMeuCadastro.ts'
-import { extrairMensagemDeErro } from '../../services/api.ts'
-import { atualizarMeuCadastro, excluirMinhaConta } from '../../services/clienteService.ts'
-import type { Cliente, DadosCliente } from '../../types/cliente.ts'
+import { Alert, Box, Button, InputAdornment, TextField, Typography, type SxProps, type Theme } from '@mui/material';
+import { useState, type ChangeEvent, type SubmitEvent } from 'react';
+import { Carregando } from '@/components/Carregando.tsx';
+import { DialogoConfirmacao } from '@/components/DialogoConfirmacao.tsx';
+import { SecaoFormulario } from '@/components/SecaoFormulario.tsx';
+import { TEXTOS } from '@/constants/textos.ts';
+import { REGRAS_VALIDACAO } from '@/constants/validacao.ts';
+import { useAutenticacao } from '@/hooks/useAutenticacao.ts';
+import { useMeuCadastro } from '@/hooks/useMeuCadastro.ts';
+import { extrairMensagemDeErro } from '@/services/api.ts';
+import { atualizarMeuCadastro, excluirMinhaConta } from '@/services/clienteService.ts';
+import type { Cliente, DadosCliente } from '@/types/cliente.ts';
 
-type CampoIdentificacao = 'nome' | 'cpf' | 'rg' | 'endereco' | 'profissao'
+type CampoIdentificacao = 'nome' | 'cpf' | 'rg' | 'endereco' | 'profissao';
 
-type CampoRendimento = 'entidadeEmpregadora' | 'valor'
+type CampoRendimento = 'entidadeEmpregadora' | 'valor';
 
 interface RendimentoEmEdicao {
-  chave: string
-  entidadeEmpregadora: string
-  valor: string
+  chave: string;
+  entidadeEmpregadora: string;
+  valor: string;
 }
 
 function criarRendimentoVazio(): RendimentoEmEdicao {
-  return { chave: crypto.randomUUID(), entidadeEmpregadora: '', valor: '' }
+  return { chave: crypto.randomUUID(), entidadeEmpregadora: '', valor: '' };
 }
 
 function paraRendimentosEmEdicao(cliente: Cliente): RendimentoEmEdicao[] {
@@ -39,7 +30,7 @@ function paraRendimentosEmEdicao(cliente: Cliente): RendimentoEmEdicao[] {
     chave: crypto.randomUUID(),
     entidadeEmpregadora: rendimento.entidadeEmpregadora,
     valor: String(rendimento.valor),
-  }))
+  }));
 }
 
 function paraIdentificacao(cliente: Cliente) {
@@ -49,11 +40,11 @@ function paraIdentificacao(cliente: Cliente) {
     rg: cliente.rg,
     endereco: cliente.endereco,
     profissao: cliente.profissao,
-  }
+  };
 }
 
 export function PaginaMeuCadastro() {
-  const { cliente, carregando, erro } = useMeuCadastro()
+  const { cliente, carregando, erro } = useMeuCadastro();
 
   return (
     <Box sx={estilos.pagina}>
@@ -64,29 +55,29 @@ export function PaginaMeuCadastro() {
       {erro && <Alert severity="error">{erro}</Alert>}
       {cliente && !carregando && <FormularioMeuCadastro cliente={cliente} />}
     </Box>
-  )
+  );
 }
 
 function FormularioMeuCadastro({ cliente }: { cliente: Cliente }) {
-  const { sair } = useAutenticacao()
-  const [clienteSalvo, setClienteSalvo] = useState(cliente)
-  const [identificacao, setIdentificacao] = useState(() => paraIdentificacao(cliente))
-  const [rendimentos, setRendimentos] = useState(() => paraRendimentosEmEdicao(cliente))
-  const [salvando, setSalvando] = useState(false)
-  const [sucesso, setSucesso] = useState<string | null>(null)
-  const [erro, setErro] = useState<string | null>(null)
-  const [confirmandoExclusao, setConfirmandoExclusao] = useState(false)
-  const [excluindo, setExcluindo] = useState(false)
-  const atingiuLimite = rendimentos.length >= REGRAS_VALIDACAO.maximoRendimentos
+  const { sair } = useAutenticacao();
+  const [clienteSalvo, setClienteSalvo] = useState(cliente);
+  const [identificacao, setIdentificacao] = useState(() => paraIdentificacao(cliente));
+  const [rendimentos, setRendimentos] = useState(() => paraRendimentosEmEdicao(cliente));
+  const [salvando, setSalvando] = useState(false);
+  const [sucesso, setSucesso] = useState<string | null>(null);
+  const [erro, setErro] = useState<string | null>(null);
+  const [confirmandoExclusao, setConfirmandoExclusao] = useState(false);
+  const [excluindo, setExcluindo] = useState(false);
+  const atingiuLimite = rendimentos.length >= REGRAS_VALIDACAO.maximoRendimentos;
 
   function alterarCampo(campo: CampoIdentificacao) {
     return (evento: ChangeEvent<HTMLInputElement>) =>
-      setIdentificacao((atual) => ({ ...atual, [campo]: evento.target.value }))
+      setIdentificacao((atual) => ({ ...atual, [campo]: evento.target.value }));
   }
 
   function preencherCom(dados: Cliente) {
-    setIdentificacao(paraIdentificacao(dados))
-    setRendimentos(paraRendimentosEmEdicao(dados))
+    setIdentificacao(paraIdentificacao(dados));
+    setRendimentos(paraRendimentosEmEdicao(dados));
   }
 
   function montarDadosCliente(): DadosCliente {
@@ -96,52 +87,52 @@ function FormularioMeuCadastro({ cliente }: { cliente: Cliente }) {
         entidadeEmpregadora: rendimento.entidadeEmpregadora.trim(),
         valor: Number(rendimento.valor),
       })),
-    }
+    };
   }
 
   async function salvar(evento: SubmitEvent<HTMLFormElement>) {
-    evento.preventDefault()
-    setErro(null)
-    setSucesso(null)
-    setSalvando(true)
+    evento.preventDefault();
+    setErro(null);
+    setSucesso(null);
+    setSalvando(true);
     try {
-      const atualizado = await atualizarMeuCadastro(montarDadosCliente())
-      setClienteSalvo(atualizado)
-      preencherCom(atualizado)
-      setSucesso(TEXTOS.meuCadastro.cadastroAtualizado)
+      const atualizado = await atualizarMeuCadastro(montarDadosCliente());
+      setClienteSalvo(atualizado);
+      preencherCom(atualizado);
+      setSucesso(TEXTOS.meuCadastro.cadastroAtualizado);
     } catch (falha) {
-      setErro(extrairMensagemDeErro(falha))
+      setErro(extrairMensagemDeErro(falha));
     } finally {
-      setSalvando(false)
+      setSalvando(false);
     }
   }
 
   function descartar() {
-    setErro(null)
-    setSucesso(null)
-    preencherCom(clienteSalvo)
+    setErro(null);
+    setSucesso(null);
+    preencherCom(clienteSalvo);
   }
 
   async function excluirConta() {
-    setExcluindo(true)
+    setExcluindo(true);
     try {
-      await excluirMinhaConta()
-      sair(TEXTOS.meuCadastro.contaExcluida)
+      await excluirMinhaConta();
+      sair(TEXTOS.meuCadastro.contaExcluida);
     } catch (falha) {
-      setErro(extrairMensagemDeErro(falha))
-      setConfirmandoExclusao(false)
-      setExcluindo(false)
+      setErro(extrairMensagemDeErro(falha));
+      setConfirmandoExclusao(false);
+      setExcluindo(false);
     }
   }
 
   function adicionarRendimento() {
     if (!atingiuLimite) {
-      setRendimentos((atuais) => [...atuais, criarRendimentoVazio()])
+      setRendimentos((atuais) => [...atuais, criarRendimentoVazio()]);
     }
   }
 
   function removerRendimento(chave: string) {
-    setRendimentos((atuais) => atuais.filter((rendimento) => rendimento.chave !== chave))
+    setRendimentos((atuais) => atuais.filter((rendimento) => rendimento.chave !== chave));
   }
 
   function alterarRendimento(chave: string, campo: CampoRendimento) {
@@ -150,7 +141,7 @@ function FormularioMeuCadastro({ cliente }: { cliente: Cliente }) {
         atuais.map((rendimento) =>
           rendimento.chave === chave ? { ...rendimento, [campo]: evento.target.value } : rendimento,
         ),
-      )
+      );
   }
 
   return (
@@ -172,12 +163,7 @@ function FormularioMeuCadastro({ cliente }: { cliente: Cliente }) {
             onChange={alterarCampo('cpf')}
             required
           />
-          <TextField
-            label={TEXTOS.camposCliente.rg}
-            value={identificacao.rg}
-            onChange={alterarCampo('rg')}
-            required
-          />
+          <TextField label={TEXTOS.camposCliente.rg} value={identificacao.rg} onChange={alterarCampo('rg')} required />
         </Box>
         <TextField
           label={TEXTOS.camposCliente.endereco}
@@ -261,7 +247,7 @@ function FormularioMeuCadastro({ cliente }: { cliente: Cliente }) {
         aoConfirmar={excluirConta}
       />
     </Box>
-  )
+  );
 }
 
 const estilos = {
@@ -296,4 +282,4 @@ const estilos = {
     display: 'flex',
     gap: 2,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

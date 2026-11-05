@@ -1,6 +1,6 @@
-import { Box, Typography, type SxProps, type Theme } from '@mui/material'
-import { ESTADOS_ETAPA } from '../constants/status.ts'
-import type { EstadoEtapa, EtapaAndamento } from '../utils/andamentoPedido.ts'
+import { Box, Typography, type SxProps, type Theme } from '@mui/material';
+import { ESTADOS_ETAPA } from '@/constants/status.ts';
+import type { EstadoEtapa, EtapaAndamento } from '@/utils/andamentoPedido.ts';
 
 export function AndamentoPedido({ etapas }: { etapas: EtapaAndamento[] }) {
   return (
@@ -14,7 +14,7 @@ export function AndamentoPedido({ etapas }: { etapas: EtapaAndamento[] }) {
         </Box>
       ))}
     </Box>
-  )
+  );
 }
 
 const ESTILOS_MARCADOR = {
@@ -22,7 +22,7 @@ const ESTILOS_MARCADOR = {
   [ESTADOS_ETAPA.atual]: { bgcolor: 'secondary.main', borderColor: 'secondary.main', boxShadow: 3 },
   [ESTADOS_ETAPA.pendente]: { bgcolor: 'background.paper', borderColor: 'divider' },
   [ESTADOS_ETAPA.erro]: { bgcolor: 'error.main', borderColor: 'error.main' },
-} satisfies Record<EstadoEtapa, SxProps<Theme>>
+} satisfies Record<EstadoEtapa, SxProps<Theme>>;
 
 const estilos = {
   lista: {
@@ -45,4 +45,4 @@ const estilos = {
     borderRadius: '50%',
     border: 2,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

@@ -1,18 +1,18 @@
-const URL_PADRAO_DA_API = 'http://localhost:8080'
+const URL_PADRAO_DA_API = 'http://localhost:8080';
 
-export const API_URL = import.meta.env.VITE_API_URL || URL_PADRAO_DA_API
+export const API_URL = import.meta.env.VITE_API_URL || URL_PADRAO_DA_API;
 
-export const TEMPO_LIMITE_MS = 15000
+export const TEMPO_LIMITE_MS = 15000;
 
 export const CABECALHOS_HTTP = {
   autorizacao: 'Authorization',
-} as const
+} as const;
 
-export const TIPO_TOKEN = 'Bearer'
+export const TIPO_TOKEN = 'Bearer';
 
 export const STATUS_HTTP = {
   naoAutorizado: 401,
-} as const
+} as const;
 
 export const ENDPOINTS = {
   auth: {
@@ -33,8 +33,8 @@ export const ENDPOINTS = {
   agentes: {
     base: '/agentes',
   },
-} as const
+} as const;
 
 export const PARAMETROS_API = {
   status: 'status',
-} as const
+} as const;

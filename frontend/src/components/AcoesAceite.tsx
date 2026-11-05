@@ -1,54 +1,46 @@
-import {
-  Alert,
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TextField,
-} from '@mui/material'
-import { useState } from 'react'
-import { STATUS_PEDIDO } from '../constants/status.ts'
-import { TEXTOS } from '../constants/textos.ts'
-import { REGRAS_VALIDACAO } from '../constants/validacao.ts'
-import { extrairMensagemDeErro } from '../services/api.ts'
-import { avaliarPedido } from '../services/pedidoService.ts'
-import type { Pedido } from '../types/pedido.ts'
-import { formatarNumeroPedido } from '../utils/formatacao.ts'
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from '@mui/material';
+import { useState } from 'react';
+import { STATUS_PEDIDO } from '@/constants/status.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import { REGRAS_VALIDACAO } from '@/constants/validacao.ts';
+import { extrairMensagemDeErro } from '@/services/api.ts';
+import { avaliarPedido } from '@/services/pedidoService.ts';
+import type { Pedido } from '@/types/pedido.ts';
+import { formatarNumeroPedido } from '@/utils/formatacao.ts';
 
 interface PropriedadesAcoesAceite {
-  pedido: Pedido
-  aoResponder: () => void
+  pedido: Pedido;
+  aoResponder: () => void;
 }
 
 export function AcoesAceite({ pedido, aoResponder }: PropriedadesAcoesAceite) {
-  const [aceitar, setAceitar] = useState<boolean | null>(null)
-  const [observacao, setObservacao] = useState('')
-  const [enviando, setEnviando] = useState(false)
-  const [erro, setErro] = useState<string | null>(null)
-  const pendente = pedido.status === STATUS_PEDIDO.emAnalise
-  const numero = formatarNumeroPedido(pedido.id)
+  const [aceitar, setAceitar] = useState<boolean | null>(null);
+  const [observacao, setObservacao] = useState('');
+  const [enviando, setEnviando] = useState(false);
+  const [erro, setErro] = useState<string | null>(null);
+  const pendente = pedido.status === STATUS_PEDIDO.emAnalise;
+  const numero = formatarNumeroPedido(pedido.id);
 
   function abrir(valor: boolean) {
-    setObservacao('')
-    setErro(null)
-    setAceitar(valor)
+    setObservacao('');
+    setErro(null);
+    setAceitar(valor);
   }
 
   async function confirmar() {
     if (aceitar === null) {
-      return
+      return;
     }
-    setEnviando(true)
-    setErro(null)
+    setEnviando(true);
+    setErro(null);
     try {
-      await avaliarPedido(pedido.id, { resultado: aceitar, observacao: observacao.trim() })
-      setAceitar(null)
-      aoResponder()
+      await avaliarPedido(pedido.id, { resultado: aceitar, observacao: observacao.trim() });
+      setAceitar(null);
+      aoResponder();
     } catch (falha) {
-      setErro(extrairMensagemDeErro(falha))
+      setErro(extrairMensagemDeErro(falha));
     } finally {
-      setEnviando(false)
+      setEnviando(false);
     }
   }
 
@@ -89,5 +81,5 @@ export function AcoesAceite({ pedido, aoResponder }: PropriedadesAcoesAceite) {
         </DialogActions>
       </Dialog>
     </>
-  )
+  );
 }

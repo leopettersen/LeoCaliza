@@ -1,33 +1,32 @@
-import { AppBar, Box, Button, Toolbar, Typography, type SxProps, type Theme } from '@mui/material'
-import { NavLink, Outlet, useNavigate } from 'react-router-dom'
-import { LARGURAS } from '../constants/estilo.ts'
-import { IMAGENS } from '../constants/imagens.ts'
-import { MENUS } from '../constants/menus.ts'
-import { PERFIS, TIPOS_AGENTE } from '../constants/perfis.ts'
-import { ROTAS } from '../constants/rotas.ts'
-import { TEXTOS } from '../constants/textos.ts'
-import { useAutenticacao } from '../hooks/useAutenticacao.ts'
-import type { Sessao } from '../types/auth.ts'
+import { AppBar, Box, Button, Toolbar, Typography, type SxProps, type Theme } from '@mui/material';
+import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { LARGURAS } from '@/constants/estilo.ts';
+import { IMAGENS } from '@/constants/imagens.ts';
+import { MENUS } from '@/constants/menus.ts';
+import { PERFIS, TIPOS_AGENTE } from '@/constants/perfis.ts';
+import { ROTAS } from '@/constants/rotas.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import { useAutenticacao } from '@/hooks/useAutenticacao.ts';
+import type { Sessao } from '@/types/auth.ts';
 
 function descreverUsuario(sessao: Sessao) {
-  const rotuloTipo =
-    sessao.tipoAgente === TIPOS_AGENTE.banco ? TEXTOS.tiposAgente.banco : TEXTOS.tiposAgente.empresa
+  const rotuloTipo = sessao.tipoAgente === TIPOS_AGENTE.banco ? TEXTOS.tiposAgente.banco : TEXTOS.tiposAgente.empresa;
   const rotuloPerfil =
-    sessao.perfil === PERFIS.agente ? TEXTOS.menu.perfilAgente(rotuloTipo) : TEXTOS.menu.perfilCliente
-  return [sessao.nome, rotuloPerfil].join(TEXTOS.menu.separador)
+    sessao.perfil === PERFIS.agente ? TEXTOS.menu.perfilAgente(rotuloTipo) : TEXTOS.menu.perfilCliente;
+  return [sessao.nome, rotuloPerfil].join(TEXTOS.menu.separador);
 }
 
 export function LayoutPrincipal() {
-  const { sessao, sair } = useAutenticacao()
-  const navegar = useNavigate()
+  const { sessao, sair } = useAutenticacao();
+  const navegar = useNavigate();
 
   if (!sessao) {
-    return null
+    return null;
   }
 
   function encerrarSessao() {
-    sair()
-    navegar(ROTAS.login, { replace: true })
+    sair();
+    navegar(ROTAS.login, { replace: true });
   }
 
   return (
@@ -54,7 +53,7 @@ export function LayoutPrincipal() {
         <Outlet />
       </Box>
     </Box>
-  )
+  );
 }
 
 const estilos = {
@@ -109,4 +108,4 @@ const estilos = {
     px: 3,
     py: 4,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

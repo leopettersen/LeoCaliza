@@ -1,31 +1,31 @@
-import axios from 'axios'
-import { API_URL, CABECALHOS_HTTP, ENDPOINTS, STATUS_HTTP, TEMPO_LIMITE_MS, TIPO_TOKEN } from '../constants/api.ts'
-import { TEXTOS } from '../constants/textos.ts'
-import { lerSessaoSalva } from './armazenamentoSessao.ts'
+import axios from 'axios';
+import { API_URL, CABECALHOS_HTTP, ENDPOINTS, STATUS_HTTP, TEMPO_LIMITE_MS, TIPO_TOKEN } from '@/constants/api.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import { lerSessaoSalva } from '@/services/armazenamentoSessao.ts';
 
 export const api = axios.create({
   baseURL: API_URL,
   timeout: TEMPO_LIMITE_MS,
-})
+});
 
-let ouvinteSessaoExpirada: (() => void) | null = null
+let ouvinteSessaoExpirada: (() => void) | null = null;
 
 export function aoExpirarSessao(ouvinte: () => void) {
-  ouvinteSessaoExpirada = ouvinte
+  ouvinteSessaoExpirada = ouvinte;
   return () => {
     if (ouvinteSessaoExpirada === ouvinte) {
-      ouvinteSessaoExpirada = null
+      ouvinteSessaoExpirada = null;
     }
-  }
+  };
 }
 
 api.interceptors.request.use((configuracao) => {
-  const sessao = lerSessaoSalva()
+  const sessao = lerSessaoSalva();
   if (sessao) {
-    configuracao.headers.set(CABECALHOS_HTTP.autorizacao, `${TIPO_TOKEN} ${sessao.token}`)
+    configuracao.headers.set(CABECALHOS_HTTP.autorizacao, `${TIPO_TOKEN} ${sessao.token}`);
   }
-  return configuracao
-})
+  return configuracao;
+});
 
 api.interceptors.response.use(undefined, (erro: unknown) => {
   if (
@@ -33,17 +33,17 @@ api.interceptors.response.use(undefined, (erro: unknown) => {
     erro.response?.status === STATUS_HTTP.naoAutorizado &&
     erro.config?.url !== ENDPOINTS.auth.login
   ) {
-    ouvinteSessaoExpirada?.()
+    ouvinteSessaoExpirada?.();
   }
-  return Promise.reject(erro)
-})
+  return Promise.reject(erro);
+});
 
 export function extrairMensagemDeErro(erro: unknown) {
   if (axios.isAxiosError<{ erro?: string }>(erro)) {
     if (!erro.response) {
-      return TEXTOS.erros.semConexao
+      return TEXTOS.erros.semConexao;
     }
-    return erro.response.data?.erro ?? TEXTOS.erros.generico
+    return erro.response.data?.erro ?? TEXTOS.erros.generico;
   }
-  return TEXTOS.erros.generico
+  return TEXTOS.erros.generico;
 }

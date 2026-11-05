@@ -1,8 +1,8 @@
-import { ENDPOINTS } from '../constants/api.ts'
-import type { Agente } from '../types/agente.ts'
-import { api } from './api.ts'
+import { ENDPOINTS } from '@/constants/api.ts';
+import type { Agente } from '@/types/agente.ts';
+import { api } from '@/services/api.ts';
 
 export async function listarAgentes() {
-  const { data } = await api.get<Agente[]>(ENDPOINTS.agentes.base)
-  return data
+  const { data } = await api.get<Agente[]>(ENDPOINTS.agentes.base);
+  return data;
 }

@@ -13,9 +13,9 @@ export const ROTAS = {
     pedidos: '/agente/pedidos',
     editarPedido: '/agente/pedidos/:id/editar',
   },
-} as const
+} as const;
 
 export const PARAMETROS_URL = {
   perfil: 'perfil',
   pedido: 'pedido',
-} as const
+} as const;

@@ -8,4 +8,4 @@ export const FORMATOS = {
   separadorPeriodo: ' – ',
   separadorAutomovel: ' · ',
   separadorPalavras: ' ',
-} as const
+} as const;

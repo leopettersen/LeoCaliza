@@ -1,29 +1,29 @@
-import { Alert, Box, Button, Typography, type SxProps, type Theme } from '@mui/material'
-import { useNavigate, useParams } from 'react-router-dom'
-import { Carregando } from '../../components/Carregando.tsx'
-import { FormularioPedido } from '../../components/FormularioPedido.tsx'
-import { PERFIS } from '../../constants/perfis.ts'
-import { ROTAS } from '../../constants/rotas.ts'
-import { TEXTOS } from '../../constants/textos.ts'
-import { useAutenticacao } from '../../hooks/useAutenticacao.ts'
-import { usePedido } from '../../hooks/usePedido.ts'
-import { obterCaminhoDetalhePedido } from '../../routes/caminhos.ts'
-import { modificarPedido } from '../../services/pedidoService.ts'
-import type { DadosPedido } from '../../types/pedido.ts'
-import { formatarNumeroPedido } from '../../utils/formatacao.ts'
-import { paraValoresFormulario } from '../../utils/formularioPedido.ts'
-import { podeModificar } from '../../utils/regrasPedido.ts'
+import { Alert, Box, Button, Typography, type SxProps, type Theme } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
+import { Carregando } from '@/components/Carregando.tsx';
+import { FormularioPedido } from '@/components/FormularioPedido.tsx';
+import { PERFIS } from '@/constants/perfis.ts';
+import { ROTAS } from '@/constants/rotas.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import { useAutenticacao } from '@/hooks/useAutenticacao.ts';
+import { usePedido } from '@/hooks/usePedido.ts';
+import { obterCaminhoDetalhePedido } from '@/routes/caminhos.ts';
+import { modificarPedido } from '@/services/pedidoService.ts';
+import type { DadosPedido } from '@/types/pedido.ts';
+import { formatarNumeroPedido } from '@/utils/formatacao.ts';
+import { paraValoresFormulario } from '@/utils/formularioPedido.ts';
+import { podeModificar } from '@/utils/regrasPedido.ts';
 
 export function PaginaEditarPedido() {
-  const { id } = useParams()
-  const navegar = useNavigate()
-  const { sessao } = useAutenticacao()
-  const { pedido, carregando, erro } = usePedido(Number(id))
-  const ehAgente = sessao?.perfil === PERFIS.agente
-  const rotaLista = ehAgente ? ROTAS.agente.pedidos : ROTAS.cliente.pedidos
+  const { id } = useParams();
+  const navegar = useNavigate();
+  const { sessao } = useAutenticacao();
+  const { pedido, carregando, erro } = usePedido(Number(id));
+  const ehAgente = sessao?.perfil === PERFIS.agente;
+  const rotaLista = ehAgente ? ROTAS.agente.pedidos : ROTAS.cliente.pedidos;
 
   if (carregando) {
-    return <Carregando />
+    return <Carregando />;
   }
 
   if (erro || !pedido || !podeModificar(pedido)) {
@@ -36,14 +36,14 @@ export function PaginaEditarPedido() {
           </Button>
         </Box>
       </Box>
-    )
+    );
   }
 
-  const rotaRetorno = ehAgente ? ROTAS.agente.pedidos : obterCaminhoDetalhePedido(pedido.id)
+  const rotaRetorno = ehAgente ? ROTAS.agente.pedidos : obterCaminhoDetalhePedido(pedido.id);
 
   async function salvarAlteracoes(dados: DadosPedido) {
-    await modificarPedido(Number(id), dados)
-    navegar(rotaRetorno)
+    await modificarPedido(Number(id), dados);
+    navegar(rotaRetorno);
   }
 
   return (
@@ -60,7 +60,7 @@ export function PaginaEditarPedido() {
         avisoResumo={ehAgente ? TEXTOS.editarPedido.avisoContratante(pedido.cliente.nome) : undefined}
       />
     </Box>
-  )
+  );
 }
 
 const estilos = {
@@ -69,4 +69,4 @@ const estilos = {
     flexDirection: 'column',
     gap: 3,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

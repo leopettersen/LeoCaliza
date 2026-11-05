@@ -1,6 +1,6 @@
-import { createTheme } from '@mui/material/styles'
-import { CORES } from '../constants/cores.ts'
-import { FONTES, PESOS_FONTE, RAIO_BORDA, TAMANHOS_FONTE, UNIDADE_ESPACAMENTO } from '../constants/estilo.ts'
+import { createTheme } from '@mui/material/styles';
+import { CORES } from '@/constants/cores.ts';
+import { FONTES, PESOS_FONTE, RAIO_BORDA, TAMANHOS_FONTE, UNIDADE_ESPACAMENTO } from '@/constants/estilo.ts';
 
 export const tema = createTheme({
   palette: {
@@ -22,4 +22,4 @@ export const tema = createTheme({
   },
   shape: { borderRadius: RAIO_BORDA },
   spacing: UNIDADE_ESPACAMENTO,
-})
+});

@@ -15,59 +15,59 @@ import {
   Typography,
   type SxProps,
   type Theme,
-} from '@mui/material'
-import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AcoesAceite } from '../../components/AcoesAceite.tsx'
-import { AcoesPedido } from '../../components/AcoesPedido.tsx'
-import { Carregando } from '../../components/Carregando.tsx'
-import { FiltroStatus, TODOS_OS_STATUS, type OpcaoFiltroStatus } from '../../components/FiltroStatus.tsx'
-import { SeloStatus } from '../../components/SeloStatus.tsx'
-import { ROTAS } from '../../constants/rotas.ts'
-import { TEXTOS } from '../../constants/textos.ts'
-import { useAutenticacao } from '../../hooks/useAutenticacao.ts'
-import { usePedidos } from '../../hooks/usePedidos.ts'
-import { obterCaminhoDetalhePedido } from '../../routes/caminhos.ts'
-import type { Pedido } from '../../types/pedido.ts'
-import { descreverAutomovel, formatarNumeroPedido, formatarPeriodo } from '../../utils/formatacao.ts'
+} from '@mui/material';
+import { useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AcoesAceite } from '@/components/AcoesAceite.tsx';
+import { AcoesPedido } from '@/components/AcoesPedido.tsx';
+import { Carregando } from '@/components/Carregando.tsx';
+import { FiltroStatus, TODOS_OS_STATUS, type OpcaoFiltroStatus } from '@/components/FiltroStatus.tsx';
+import { SeloStatus } from '@/components/SeloStatus.tsx';
+import { ROTAS } from '@/constants/rotas.ts';
+import { TEXTOS } from '@/constants/textos.ts';
+import { useAutenticacao } from '@/hooks/useAutenticacao.ts';
+import { usePedidos } from '@/hooks/usePedidos.ts';
+import { obterCaminhoDetalhePedido } from '@/routes/caminhos.ts';
+import type { Pedido } from '@/types/pedido.ts';
+import { descreverAutomovel, formatarNumeroPedido, formatarPeriodo } from '@/utils/formatacao.ts';
 
 function correspondeABusca(pedido: Pedido, busca: string) {
-  const termo = busca.trim().toLowerCase()
+  const termo = busca.trim().toLowerCase();
   if (!termo) {
-    return true
+    return true;
   }
-  const { marca, modelo, placa } = pedido.automovel
+  const { marca, modelo, placa } = pedido.automovel;
   return [formatarNumeroPedido(pedido.id), String(pedido.id), marca, modelo, placa].some((valor) =>
     valor.toLowerCase().includes(termo),
-  )
+  );
 }
 
-type AbaPedidos = 'enviados' | 'aceitar'
+type AbaPedidos = 'enviados' | 'aceitar';
 
 export function PaginaMeusPedidos() {
-  const navegar = useNavigate()
-  const { sessao } = useAutenticacao()
-  const [aba, setAba] = useState<AbaPedidos>('enviados')
-  const [status, setStatus] = useState<OpcaoFiltroStatus>(TODOS_OS_STATUS)
-  const [busca, setBusca] = useState('')
-  const { pedidos, carregando, erro, recarregar } = usePedidos(status || undefined)
+  const navegar = useNavigate();
+  const { sessao } = useAutenticacao();
+  const [aba, setAba] = useState<AbaPedidos>('enviados');
+  const [status, setStatus] = useState<OpcaoFiltroStatus>(TODOS_OS_STATUS);
+  const [busca, setBusca] = useState('');
+  const { pedidos, carregando, erro, recarregar } = usePedidos(status || undefined);
 
   const pedidosPorAba = useMemo(() => {
     if (!sessao) {
-      return []
+      return [];
     }
     if (aba === 'enviados') {
-      return pedidos.filter((pedido) => pedido.cliente.id === sessao.id)
+      return pedidos.filter((pedido) => pedido.cliente.id === sessao.id);
     }
     return pedidos.filter(
       (pedido) => pedido.automovel.tipoProprietario === 'CLIENTE' && pedido.automovel.proprietarioId === sessao.id,
-    )
-  }, [aba, pedidos, sessao])
+    );
+  }, [aba, pedidos, sessao]);
 
   const pedidosFiltrados = useMemo(
     () => pedidosPorAba.filter((pedido) => correspondeABusca(pedido, busca)),
     [pedidosPorAba, busca],
-  )
+  );
 
   return (
     <Box sx={estilos.pagina}>
@@ -152,7 +152,7 @@ export function PaginaMeusPedidos() {
         {TEXTOS.meusPedidos.legendaStatus}
       </Typography>
     </Box>
-  )
+  );
 }
 
 const estilos = {
@@ -197,4 +197,4 @@ const estilos = {
     borderColor: 'divider',
     pl: 1.5,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;

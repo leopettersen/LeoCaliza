@@ -8,19 +8,19 @@ import {
   DialogTitle,
   type SxProps,
   type Theme,
-} from '@mui/material'
+} from '@mui/material';
 
 interface PropriedadesDialogoConfirmacao {
-  aberto: boolean
-  titulo: string
-  texto: string
-  rotuloConfirmar: string
-  rotuloCancelar: string
-  processando?: boolean
-  erro?: string | null
-  corConfirmar?: 'error' | 'primary'
-  aoConfirmar: () => void
-  aoCancelar: () => void
+  aberto: boolean;
+  titulo: string;
+  texto: string;
+  rotuloConfirmar: string;
+  rotuloCancelar: string;
+  processando?: boolean;
+  erro?: string | null;
+  corConfirmar?: 'error' | 'primary';
+  aoConfirmar: () => void;
+  aoCancelar: () => void;
 }
 
 export function DialogoConfirmacao({
@@ -55,11 +55,11 @@ export function DialogoConfirmacao({
         </Button>
       </DialogActions>
     </Dialog>
-  )
+  );
 }
 
 const estilos = {
   erro: {
     mt: 2,
   },
-} satisfies Record<string, SxProps<Theme>>
+} satisfies Record<string, SxProps<Theme>>;
